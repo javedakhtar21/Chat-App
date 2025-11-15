@@ -1,8 +1,9 @@
 import "./App.css";
 import LogoBar from "./components/logobar/LogoBar";
 import Dashboard from "./components/user-dashboard/Dashboard";
-
+        
 function App() {
+  
   return (
     <div className="d-flex flex-column vh-100">
       <LogoBar />

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { FaPlus, FaFilter } from "react-icons/fa";
 import { FilterChatModal } from "../Modals/FilterChatModal";
+import { NewChatModal } from "../Modals/AddChatModal";
 
 const ChatItemHeader: React.FC = () => {
   const [openFilterDialog, setOpenFilterDialog] = useState(false);
+  const [openNewChatDialog, setOpenNewChatDialog] = useState(false);
 
   const handleOpenfilterDialog = () => {
     setOpenFilterDialog(!openFilterDialog);
@@ -13,14 +15,25 @@ const ChatItemHeader: React.FC = () => {
     setOpenFilterDialog(false);
   };
 
-  const onAddChat = () => {};
+  const handleOpenNewChat = () => {
+    setOpenNewChatDialog(!openNewChatDialog);
+  };
+
+  const handleCloseNewChat = () => {
+    setOpenNewChatDialog(false);
+  };
 
   return (
     <div>
       <FilterChatModal
         open={openFilterDialog}
-        // open={true}
         onOpenChange={handleClosefilterDialog}
+      />
+
+      {/* NEW CHAT MODAL */}
+      <NewChatModal
+        open={openNewChatDialog}
+        onOpenChange={handleCloseNewChat}
       />
 
       <div className="d-flex justify-content-between align-items-center p-3 border-bottom">
@@ -28,11 +41,11 @@ const ChatItemHeader: React.FC = () => {
 
         <div className="d-flex gap-2">
           <button
-            onClick={onAddChat}
+            onClick={handleOpenNewChat}
             className="btn btn-success d-flex align-items-center gap-1"
           >
             <FaPlus />
-            <span>New Chat</span>
+            {/* <span>New Chat</span> */}
           </button>
 
           <button
@@ -40,7 +53,6 @@ const ChatItemHeader: React.FC = () => {
             className="btn btn-outline-light d-flex align-items-center gap-1"
           >
             <FaFilter />
-            {/* <span>Filter</span> */}
           </button>
         </div>
       </div>
