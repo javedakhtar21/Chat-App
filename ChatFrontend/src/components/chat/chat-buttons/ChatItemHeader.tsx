@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { FaPlus, FaFilter } from "react-icons/fa";
 import { FilterChatModal } from "../Modals/FilterChatModal";
 import { NewChatModal } from "../Modals/AddChatModal";
+import Button from "../../ui/Button/TButton";
+import Tooltip from "../../ui/Tooltip/Tooltip";
 
 const ChatItemHeader: React.FC = () => {
   const [openFilterDialog, setOpenFilterDialog] = useState(false);
@@ -24,7 +26,7 @@ const ChatItemHeader: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="border">
       <FilterChatModal
         open={openFilterDialog}
         onOpenChange={handleClosefilterDialog}
@@ -36,24 +38,32 @@ const ChatItemHeader: React.FC = () => {
         onOpenChange={handleCloseNewChat}
       />
 
-      <div className="d-flex justify-content-between align-items-center p-3 border-bottom">
-        <h2 className="m-0 fw-semibold">Chats</h2>
+      <div className="d-flex justify-content-between align-items-center border-bottom p-2">
+        <h2 className="fw-semibold">Chats</h2>
 
         <div className="d-flex gap-2">
-          <button
+          <Tooltip text="Add new contact" bgColor="blue" textColor="white" position="top">
+            <Button
             onClick={handleOpenNewChat}
-            className="btn btn-light d-flex align-items-center gap-1"
+            // className="btn btn-primary d-flex align-items-center gap-1"
+            variant="primary"
+            size="sm"
           >
             <FaPlus />
             {/* <span>New Chat</span> */}
-          </button>
+          </Button>
+          </Tooltip>
 
-          <button
+         <Tooltip text="Filter chats from here" bgColor="yellow" textColor="black" position="bottom">
+           <Button
             onClick={handleOpenfilterDialog}
-            className="btn btn-light d-flex align-items-center gap-1"
+            // className="btn btn-primary d-flex align-items-center gap-1"
+            variant="primary"
+            size="sm"
           >
             <FaFilter />
-          </button>
+          </Button>
+         </Tooltip>
         </div>
       </div>
     </div>

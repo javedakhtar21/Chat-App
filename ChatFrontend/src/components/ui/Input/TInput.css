@@ -367,3 +367,20 @@
     transform: none;
   }
 }
+
+/* Clear icon (right side) */
+.clear-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #777;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+/* Clear icon hover → red */
+.clear-icon:hover {
+  color: red;
+}

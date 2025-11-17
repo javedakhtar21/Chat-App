@@ -1,5 +1,6 @@
 import React from "react";
 import "./TInput.css";
+import { FaTimes } from "react-icons/fa";
 
 interface InputProps {
   type: "text" | "tel" | "email" | "password" | "number";
@@ -68,6 +69,8 @@ const Input: React.FC<InputProps> = ({
         required={required}
         disabled={disabled}
       />
+      {/* Clear (X) Icon — appears only when text exists */}
+      {value && <FaTimes className="clear-icon" onClick={() => onChange("")} />}
       {error && <div className="input-error">{error}</div>}
       {success && !error && <div className="input-success">Looks good!</div>}
       {helperText && !error && !success && (

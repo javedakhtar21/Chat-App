@@ -57,8 +57,8 @@ export const NewChatModal: React.FC<INewChatModalProps> = ({
           className="modal-dialog position-absolute"
           role="document"
           style={{
-            top: "90px",
-            left: "410px",
+            top: "100px",
+            left: "480px",
             width: "300px", // Wider like WhatsApp New Chat panel
             maxWidth: "350px",
           }}

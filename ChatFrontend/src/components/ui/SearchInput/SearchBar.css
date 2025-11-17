@@ -1,0 +1,41 @@
+/* Search icon (left) */
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: gray;
+  pointer-events: none; /* Icon should not block typing */
+}
+
+/* Input padding for both icons */
+.search-input {
+  padding-left: 35px !important; /* Space for search icon */
+  padding-right: 30px !important; /* Space for clear icon */
+  font-size: 14px;
+  height: 38px;
+}
+
+/* Optional focus styling */
+.search-input:focus {
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+  border-color: #007bff;
+}
+
+/* Clear icon (right side) */
+.clear-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #777;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+/* Clear icon hover → red */
+.clear-icon:hover {
+  color: red;
+}

@@ -17,7 +17,17 @@ export const FilterChatModal: React.FC<IFilterChatModalProps> = ({
   open,
   onOpenChange,
 }) => {
-  const cssOfOptions = `filter-option btn text-start d-flex align-items-center gap-2 py-1`;
+  const cssOfOptions = `
+  filter-option 
+  btn 
+  text-start 
+  d-flex 
+  justify-content-start
+  align-items-center 
+  gap-2 
+  py-1 
+  w-100
+`;
 
   // ✅ Each filter has its OWN function (Future safe)
   const handleUnread = () => {
@@ -131,7 +141,7 @@ export const FilterChatModal: React.FC<IFilterChatModalProps> = ({
           className="modal-dialog position-absolute"
           role="document"
           style={{
-            top: "90px",
+            top: "100px",
             left: "535px",
             width: "180px",
             maxWidth: "260px",
@@ -147,11 +157,13 @@ export const FilterChatModal: React.FC<IFilterChatModalProps> = ({
                 type="button"
                 className="btn-close closeBtn"
                 onClick={onOpenChange}
-              >x</button>
+              >
+                x
+              </button>
             </div>
 
             {/* BODY */}
-            <div className="modal-body d-flex flex-column gap-1">
+            <div className="modal-body d-flex flex-column gap-1 w-100">
               {filterOptions.map((opt, index) => (
                 <span
                   key={index}

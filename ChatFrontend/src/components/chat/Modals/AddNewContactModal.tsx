@@ -73,11 +73,11 @@ export const NewContactModal: React.FC<INewContactModalProps> = ({
 
             {/* Footer */}
             <div className="modal-footer d-flex justify-content-end">
-              <Button variant="danger" size="md" onClick={onOpenChange}>
+              <Button variant="danger" size="sm" onClick={onOpenChange}>
                 Cancel
               </Button>
 
-              <Button variant="success" size="md" onClick={onSaveContact}>
+              <Button variant="success" size="sm" onClick={onSaveContact}>
                 Save contact
               </Button>
             </div>
