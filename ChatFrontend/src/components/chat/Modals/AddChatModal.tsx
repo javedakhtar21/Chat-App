@@ -78,7 +78,7 @@ export const NewChatModal: React.FC<INewChatModalProps> = ({
                 type="button"
                 className="btn-close closeBtn"
                 onClick={onOpenChange}
-              ></button>
+              >x</button>
             </div>
 
             {/* SEARCH BAR */}

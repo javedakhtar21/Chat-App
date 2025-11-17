@@ -147,7 +147,7 @@ export const FilterChatModal: React.FC<IFilterChatModalProps> = ({
                 type="button"
                 className="btn-close closeBtn"
                 onClick={onOpenChange}
-              ></button>
+              >x</button>
             </div>
 
             {/* BODY */}

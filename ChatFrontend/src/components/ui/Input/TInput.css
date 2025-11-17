@@ -1,0 +1,369 @@
+/* ===== BASE INPUT STYLES ===== */
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-family: inherit;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+/* ===== INPUT STATES ===== */
+
+/* Focus State */
+.input:focus {
+  border-color: #5E40F2;
+  box-shadow: 0 0 0 3px rgba(94, 64, 242, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Error State */
+.input--error {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.input--error:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+}
+
+/* Success State */
+.input--success {
+  border-color: #28a745;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+.input--success:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+}
+
+/* Disabled State */
+.input:disabled {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.7;
+  border-color: #dee2e6;
+}
+
+.input:disabled::placeholder {
+  color: #adb5bd;
+}
+
+/* ===== INPUT SIZES ===== */
+.input--sm {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+}
+
+.input--md {
+  padding: 12px 16px;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+.input--lg {
+  padding: 16px 20px;
+  font-size: 18px;
+  border-radius: 10px;
+}
+
+/* ===== INPUT VARIANTS ===== */
+
+/* Default Variant */
+.input--default {
+  background-color: #fff;
+  border: 2px solid #e2e8f0;
+}
+
+/* Filled Variant */
+.input--filled {
+  background-color: #f8f9fa;
+  border: 2px solid transparent;
+}
+
+.input--filled:focus {
+  background-color: #fff;
+  border-color: #5E40F2;
+}
+
+/* Outline Variant */
+.input--outline {
+  background-color: transparent;
+  border: 2px solid #e2e8f0;
+}
+
+.input--outline:focus {
+  background-color: #fff;
+}
+
+/* Minimal Variant */
+.input--minimal {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid #e2e8f0;
+  border-radius: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.input--minimal:focus {
+  border-bottom-color: #5E40F2;
+  box-shadow: none;
+}
+
+/* ===== INPUT WRAPPER ===== */
+.input-wrapper {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.input-required {
+  color: #dc3545;
+  margin-left: 4px;
+}
+
+/* ===== MESSAGE STYLES ===== */
+.input-error {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.input-error::before {
+  content: "⚠";
+  font-size: 14px;
+}
+
+.input-success {
+  color: #28a745;
+  font-size: 12px;
+  margin-top: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.input-success::before {
+  content: "✓";
+  font-size: 14px;
+}
+
+.input-helper {
+  color: #6b7280;
+  font-size: 12px;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* ===== INPUT WITH ICONS ===== */
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 16px;
+  color: #9ca3af;
+  z-index: 1;
+}
+
+.input-icon--right {
+  position: absolute;
+  right: 16px;
+  color: #9ca3af;
+  z-index: 1;
+}
+
+.input--with-icon {
+  padding-left: 48px;
+}
+
+.input--with-icon-right {
+  padding-right: 48px;
+}
+
+/* ===== INPUT GROUP ===== */
+.input-group {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+}
+
+.input-addon {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background-color: #f8f9fa;
+  border: 2px solid #e2e8f0;
+  color: #6b7280;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.input-addon--prepend {
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+}
+
+.input-addon--append {
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+}
+
+.input-group .input {
+  border-radius: 0;
+  flex: 1;
+}
+
+.input-group .input:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.input-group .input:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes inputShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.input--shake {
+  animation: inputShake 0.5s ease-in-out;
+}
+
+/* ===== FLOATING LABEL ===== */
+.input-floating {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-floating .input {
+  padding-top: 20px;
+  padding-bottom: 8px;
+}
+
+.input-floating-label {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  background: #fff;
+  padding: 0 4px;
+}
+
+.input:focus + .input-floating-label,
+.input:not(:placeholder-shown) + .input-floating-label {
+  top: 0;
+  transform: translateY(0);
+  font-size: 12px;
+  color: #5E40F2;
+  font-weight: 600;
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+@media (prefers-color-scheme: dark) {
+  .input {
+    background-color: #1f2937;
+    border-color: #4b5563;
+    color: #f9fafb;
+  }
+
+  .input::placeholder {
+    color: #6b7280;
+  }
+
+  .input:focus {
+    background-color: #111827;
+    border-color: #5E40F2;
+  }
+
+  .input--filled {
+    background-color: #374151;
+  }
+
+  .input-label {
+    color: #f9fafb;
+  }
+  
+  .input-floating-label {
+    background: #1f2937;
+  }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .input {
+    padding: 14px 16px;
+    font-size: 16px;
+  }
+  
+  .input-wrapper {
+    margin-bottom: 16px;
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+.input:focus-visible {
+  outline: 2px solid #5E40F2;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .input {
+    border-width: 3px;
+  }
+  
+  .input:focus {
+    border-color: #000;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .input {
+    transition: none;
+  }
+  
+  .input:focus {
+    transform: none;
+  }
+}

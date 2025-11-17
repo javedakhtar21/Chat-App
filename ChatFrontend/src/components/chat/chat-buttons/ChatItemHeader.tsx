@@ -42,7 +42,7 @@ const ChatItemHeader: React.FC = () => {
         <div className="d-flex gap-2">
           <button
             onClick={handleOpenNewChat}
-            className="btn btn-success d-flex align-items-center gap-1"
+            className="btn btn-light d-flex align-items-center gap-1"
           >
             <FaPlus />
             {/* <span>New Chat</span> */}
@@ -50,7 +50,7 @@ const ChatItemHeader: React.FC = () => {
 
           <button
             onClick={handleOpenfilterDialog}
-            className="btn btn-outline-light d-flex align-items-center gap-1"
+            className="btn btn-light d-flex align-items-center gap-1"
           >
             <FaFilter />
           </button>

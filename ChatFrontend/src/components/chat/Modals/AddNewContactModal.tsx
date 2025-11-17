@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Toastify } from "../../ui/Toast";
+import { Toastify } from "../../ui/TToast";
+import Button from "../../ui/Button/TButton";
+import Input from "../../ui/Input/TInput";
 
 interface INewContactModalProps {
   open: boolean;
@@ -15,7 +17,7 @@ export const NewContactModal: React.FC<INewContactModalProps> = ({
 
   const onSaveContact = () => {
     if (!name || !phone) {
-      Toastify.showAlert("danger","Please fill all fields");
+      Toastify.showAlert("danger", "Please fill all fields");
       return;
     }
 
@@ -27,23 +29,6 @@ export const NewContactModal: React.FC<INewContactModalProps> = ({
 
   return (
     <>
-      <style>{`
-        .center-modal {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .new-contact-option:hover {
-          background-color: #5E40F2 !important;
-          color: white !important;
-        }
-
-        .closeBtn:hover {
-          color: red !important;
-        }
-      `}</style>
-
       <div
         className={`modal fade ${open ? "show d-block" : ""}`}
         tabIndex={-1}
@@ -61,39 +46,40 @@ export const NewContactModal: React.FC<INewContactModalProps> = ({
               <h5 className="modal-title">New Contact</h5>
               <button
                 type="button"
-                className="btn-close closeBtn"
+                className="btn-close"
                 onClick={onOpenChange}
-              ></button>
+              >x</button>
             </div>
 
             {/* Body */}
             <div className="modal-body d-flex flex-column gap-3">
-              <input
+              <Input
                 type="text"
-                className="form-control"
                 placeholder="Enter name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={setName}
+                variant="default"
               />
 
-              <input
+              <Input
                 type="tel"
-                className="form-control"
                 placeholder="Enter phone number"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={setPhone}
+                variant="default"
+
               />
             </div>
 
             {/* Footer */}
             <div className="modal-footer d-flex justify-content-end">
-              <button className="btn btn-secondary" onClick={onOpenChange}>
+              <Button variant="danger" size="md" onClick={onOpenChange}>
                 Cancel
-              </button>
+              </Button>
 
-              <button className="btn btn-success" onClick={onSaveContact}>
-                Save Contact
-              </button>
+              <Button variant="success" size="md" onClick={onSaveContact}>
+                Save contact
+              </Button>
             </div>
           </div>
         </div>
