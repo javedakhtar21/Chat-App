@@ -60,17 +60,23 @@ const Input: React.FC<InputProps> = ({
           {required && <span className="input-required">*</span>}
         </label>
       )}
-      <input
-        type={type}
-        className={combinedClasses}
-        placeholder={placeholder}
-        value={value}
-        onChange={handleChange}
-        required={required}
-        disabled={disabled}
-      />
-      {/* Clear (X) Icon — appears only when text exists */}
-      {value && <FaTimes className="clear-icon" onClick={() => onChange("")} />}
+      <div className="input-container">
+        <input
+          type={type}
+          className={combinedClasses}
+          placeholder={placeholder}
+          value={value}
+          onChange={handleChange}
+          required={required}
+          disabled={disabled}
+        />
+        {value && (
+          <FaTimes
+            className="clear-icon"
+            onClick={() => onChange("")}
+          />
+        )}
+      </div>
       {error && <div className="input-error">{error}</div>}
       {success && !error && <div className="input-success">Looks good!</div>}
       {helperText && !error && !success && (

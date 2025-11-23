@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Toastify } from "../../ui/TToast";
+import { Toastify } from "../../ui/Toast/TToast";
 import Button from "../../ui/Button/TButton";
 import Input from "../../ui/Input/TInput";
 

@@ -53,8 +53,8 @@ const Button: React.FC<ButtonProps> = ({
       disabled={disabled || loading}
       style={{ width: fullWidth ? '100%' : 'auto' }}
     >
-      {icon && !loading && <span className="btn-icon-wrapper">{icon}</span>}
-      {loading && <span className="btn-loading-spinner" />}
+      {icon && !loading && <span className="btn-icon">{icon}</span>}
+      {loading && <span className="btn-spinner" />}
       {children}
     </button>
   );

@@ -5,22 +5,23 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 14px;
-  color: gray;
-  pointer-events: none; /* Icon should not block typing */
+  color: #9ca3af;
+  pointer-events: none;
+  transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Input padding for both icons */
 .search-input {
-  padding-left: 35px !important; /* Space for search icon */
-  padding-right: 30px !important; /* Space for clear icon */
+  padding-left: 35px !important;
+  padding-right: 30px !important;
   font-size: 14px;
   height: 38px;
 }
 
 /* Optional focus styling */
 .search-input:focus {
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
-  border-color: #007bff;
+  border-color: #5E40F2;
+  background-color: #fafbff;
 }
 
 /* Clear icon (right side) */
@@ -30,12 +31,41 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 14px;
-  color: #777;
+  color: #9ca3af;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Clear icon hover → red */
 .clear-icon:hover {
-  color: red;
+  color: #dc3545;
+}
+
+/* Light Mode */
+@media (prefers-color-scheme: light) {
+  .search-icon {
+    color: #9ca3af;
+  }
+
+  .clear-icon {
+    color: #9ca3af;
+  }
+
+  .clear-icon:hover {
+    color: #dc3545;
+  }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .search-icon {
+    color: #6b7280;
+  }
+
+  .clear-icon {
+    color: #6b7280;
+  }
+
+  .clear-icon:hover {
+    color: #ff6b6b;
+  }
 }

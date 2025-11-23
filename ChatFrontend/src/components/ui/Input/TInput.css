@@ -9,7 +9,7 @@
   background-color: #fff;
   border: 2px solid #e2e8f0;
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   box-sizing: border-box;
   outline: none;
 }
@@ -24,39 +24,35 @@
 /* Focus State */
 .input:focus {
   border-color: #5E40F2;
-  box-shadow: 0 0 0 3px rgba(94, 64, 242, 0.1);
-  transform: translateY(-1px);
 }
 
 /* Error State */
 .input--error {
   border-color: #dc3545;
-  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+  background-color: #fff5f7;
 }
 
 .input--error:focus {
-  border-color: #dc3545;
-  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+  border-color: #5E40F2;
 }
 
 /* Success State */
 .input--success {
   border-color: #28a745;
-  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+  background-color: #f0fdf4;
 }
 
 .input--success:focus {
-  border-color: #28a745;
-  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+  border-color: #5E40F2;
 }
 
 /* Disabled State */
 .input:disabled {
-  background-color: #f8f9fa;
-  color: #6c757d;
+  background-color: #f5f5f5;
+  color: #999;
   cursor: not-allowed;
-  opacity: 0.7;
-  border-color: #dee2e6;
+  opacity: 0.65;
+  border-color: #e5e5e5;
 }
 
 .input:disabled::placeholder {
@@ -184,33 +180,12 @@
   line-height: 1.4;
 }
 
-/* ===== INPUT WITH ICONS ===== */
+/* ===== INPUT CONTAINER ===== */
 .input-container {
   position: relative;
   display: flex;
   align-items: center;
-}
-
-.input-icon {
-  position: absolute;
-  left: 16px;
-  color: #9ca3af;
-  z-index: 1;
-}
-
-.input-icon--right {
-  position: absolute;
-  right: 16px;
-  color: #9ca3af;
-  z-index: 1;
-}
-
-.input--with-icon {
-  padding-left: 48px;
-}
-
-.input--with-icon-right {
-  padding-right: 48px;
+  width: 100%;
 }
 
 /* ===== INPUT GROUP ===== */
@@ -282,7 +257,7 @@
   left: 16px;
   transform: translateY(-50%);
   color: #9ca3af;
-  transition: all 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
   background: #fff;
   padding: 0 4px;
@@ -297,35 +272,6 @@
   font-weight: 600;
 }
 
-/* ===== DARK MODE SUPPORT ===== */
-@media (prefers-color-scheme: dark) {
-  .input {
-    background-color: #1f2937;
-    border-color: #4b5563;
-    color: #f9fafb;
-  }
-
-  .input::placeholder {
-    color: #6b7280;
-  }
-
-  .input:focus {
-    background-color: #111827;
-    border-color: #5E40F2;
-  }
-
-  .input--filled {
-    background-color: #374151;
-  }
-
-  .input-label {
-    color: #f9fafb;
-  }
-  
-  .input-floating-label {
-    background: #1f2937;
-  }
-}
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
@@ -341,8 +287,7 @@
 
 /* ===== ACCESSIBILITY ===== */
 .input:focus-visible {
-  outline: 2px solid #5E40F2;
-  outline-offset: 2px;
+  outline: none;
 }
 
 /* High contrast mode support */
@@ -371,16 +316,17 @@
 /* Clear icon (right side) */
 .clear-icon {
   position: absolute;
-  right: 10px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 14px;
-  color: #777;
+  color: #9ca3af;
   cursor: pointer;
   transition: color 0.2s ease;
+  z-index: 2;
+  pointer-events: auto;
 }
 
-/* Clear icon hover → red */
 .clear-icon:hover {
-  color: red;
+  color: #dc3545;
 }
