@@ -2,6 +2,8 @@ import app from "./app";
 import http from "http";
 import { Server } from "socket.io";
 import { SocketConnection } from "./socket/socket-connection/socket";
+import dotenv from "dotenv";
+dotenv.config()
 
 // creating the http server
 const server = http.createServer(app);
@@ -9,7 +11,7 @@ const server = http.createServer(app);
 // initializing the socket connection
 const IO = new Server(server, {
   cors: { origin: "*", methods: ["get", "post", "put", "patch", "delete"] },
-  transports: ["websocket"],
+  // transports: ["websocket"],
 });
 
 // passing the io to the socket creation class

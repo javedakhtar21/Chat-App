@@ -116,17 +116,17 @@
 
 /* 5. SUCCESS VARIANT */
 .btn-success {
-  background: linear-gradient(135deg, #28a745, #2ecc71);
+  background: linear-gradient(135deg, #19652b, #0b5128);
   color: white;
 }
 
 .btn-success:hover:not(:disabled) {
-  background: linear-gradient(135deg, #218838, #27ae60);
+  background: linear-gradient(135deg, #19652b, #0b5128);
   transform: translateY(-1px);
 }
 
 .btn-success:active:not(:disabled) {
-  background: linear-gradient(135deg, #218838, #27ae60);
+  background: linear-gradient(135deg, #19652b, #0b5128);
   transform: translateY(0);
 }
 
