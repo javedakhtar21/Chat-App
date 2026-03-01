@@ -1,0 +1,9 @@
+.registerText{
+    text-decoration: none;
+    color:blue
+}
+
+.registerText:hover{
+    text-decoration: underline;
+    color: blue;
+}
