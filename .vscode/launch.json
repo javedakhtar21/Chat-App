@@ -1,0 +1,96 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug ChatBackend (TypeScript)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register"
+      ],
+      "args": [
+        "${workspaceFolder}/ChatBackend/src/server.ts"
+      ],
+      "cwd": "${workspaceFolder}/ChatBackend",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "sourceMaps": true,
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/ChatBackend/**",
+        "!**/node_modules/**"
+      ]
+    },
+    {
+      "name": "Debug ChatBackend (Compiled JS)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/ChatBackend/dist/server.js",
+      "cwd": "${workspaceFolder}/ChatBackend",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "sourceMaps": true,
+      "preLaunchTask": "build-backend",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/ChatBackend/**",
+        "!**/node_modules/**"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/ChatBackend/dist/**/*.js"
+      ]
+    },
+    {
+      "name": "Debug ChatBackend (ts-node-dev Watch)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "cwd": "${workspaceFolder}/ChatBackend",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "sourceMaps": true,
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/ChatBackend/**",
+        "!**/node_modules/**"
+      ]
+    },
+    {
+      "name": "Attach to ChatBackend Process",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "restart": true,
+      "cwd": "${workspaceFolder}/ChatBackend",
+      "sourceMaps": true,
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/ChatBackend/**",
+        "!**/node_modules/**"
+      ]
+    }
+  ]
+}

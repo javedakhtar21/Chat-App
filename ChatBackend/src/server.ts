@@ -1,9 +1,10 @@
 import app from "./app";
 import http from "http";
 import { Server } from "socket.io";
-import { SocketConnection } from "./socket/socket-connection/socket";
+import { SocketConnection } from "./socket/socket";
+import { socketAuthMiddleware } from "./middleware/middleware";
 import dotenv from "dotenv";
-dotenv.config()
+dotenv.config();
 
 // creating the http server
 const server = http.createServer(app);
@@ -14,11 +15,14 @@ const IO = new Server(server, {
   // transports: ["websocket"],
 });
 
+// token verifier middlewarer
+IO.use(socketAuthMiddleware);
+
 // passing the io to the socket creation class
 new SocketConnection(IO);
 
 server.listen(process.env.MAIN_PORT, () => {
   console.log(
-    `server is started on http://localhost:${process.env.MAIN_PORT} at ${process.env.ENV} environment`
+    `server is started on http://localhost:${process.env.MAIN_PORT} at ${process.env.ENV} environment`,
   );
 });

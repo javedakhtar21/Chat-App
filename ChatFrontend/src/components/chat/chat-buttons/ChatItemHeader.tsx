@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { FaPlus, FaFilter } from "react-icons/fa";
 import { FilterChatModal } from "../Modals/FilterChatModal";
 import { NewChatModal } from "../Modals/AddChatModal";
-import Button from "../../ui/Button/TButton";
-import Tooltip from "../../ui/Tooltip/Tooltip";
+import Button from "react-bootstrap/Button";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 
 const ChatItemHeader: React.FC = () => {
   const [openFilterDialog, setOpenFilterDialog] = useState(false);
@@ -32,7 +33,6 @@ const ChatItemHeader: React.FC = () => {
         onOpenChange={handleClosefilterDialog}
       />
 
-      {/* NEW CHAT MODAL */}
       <NewChatModal
         open={openNewChatDialog}
         onOpenChange={handleCloseNewChat}
@@ -42,28 +42,31 @@ const ChatItemHeader: React.FC = () => {
         <h2 className="fw-semibold">Chats</h2>
 
         <div className="d-flex gap-2">
-          <Tooltip text="Add new contact" bgColor="blue" textColor="white" position="top">
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip>Add new contact</Tooltip>}
+          >
             <Button
-            onClick={handleOpenNewChat}
-            // className="btn btn-primary d-flex align-items-center gap-1"
-            variant="primary"
-            size="sm"
-          >
-            <FaPlus />
-            {/* <span>New Chat</span> */}
-          </Button>
-          </Tooltip>
+              onClick={handleOpenNewChat}
+              variant="primary"
+              size="sm"
+            >
+              <FaPlus />
+            </Button>
+          </OverlayTrigger>
 
-         <Tooltip text="Filter chats from here" bgColor="yellow" textColor="black" position="bottom">
-           <Button
-            onClick={handleOpenfilterDialog}
-            // className="btn btn-primary d-flex align-items-center gap-1"
-            variant="primary"
-            size="sm"
+          <OverlayTrigger
+            placement="bottom"
+            overlay={<Tooltip>Filter chats from here</Tooltip>}
           >
-            <FaFilter />
-          </Button>
-         </Tooltip>
+            <Button
+              onClick={handleOpenfilterDialog}
+              variant="primary"
+              size="sm"
+            >
+              <FaFilter />
+            </Button>
+          </OverlayTrigger>
         </div>
       </div>
     </div>

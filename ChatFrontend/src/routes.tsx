@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import { Suspense, lazy } from "react";
 
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const UserDashboard = lazy(
   () => import("./components/user-dashboard/Dashboard"),
 );
@@ -13,7 +15,7 @@ const routes = createBrowserRouter([
     path: "/",
     element: (
       <Suspense fallback={<FallbackComponent />}>
-        <RegisterPage />
+        <LoginPage />
       </Suspense>
     ),
   },
@@ -26,10 +28,26 @@ const routes = createBrowserRouter([
     ),
   },
   {
+    path: "/login",
+    element: (
+      <Suspense fallback={<FallbackComponent />}>
+        <LoginPage />
+      </Suspense>
+    ),
+  },
+  {
     path: "/user/dashboard",
     element: (
       <Suspense fallback={<FallbackComponent />}>
         <UserDashboard />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/user/profile/:userId",
+    element: (
+      <Suspense fallback={<FallbackComponent />}>
+        <ProfilePage />
       </Suspense>
     ),
   },

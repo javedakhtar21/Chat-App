@@ -1,7 +1,10 @@
 import { useState } from "react";
-import Button from "../components/ui/Button/TButton";
+import Button from "react-bootstrap/Button";
+import { Link, useNavigate } from "react-router-dom";
+import { authService } from "../features/auth";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
   const initialState = {
     firstName: "",
     lastName: "",
@@ -11,6 +14,9 @@ const RegisterPage = () => {
     confirmPassword: "",
   };
   const [formData, setFormData] = useState(initialState);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -18,13 +24,45 @@ const RegisterPage = () => {
       ...prev,
       [name]: value,
     }));
+    setError("");
+    setSuccess("");
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    debugger
     e.preventDefault();
-    console.log("formData: ", formData);
+    setError("");
+    setSuccess("");
 
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
+    if (!formData.firstName || !formData.lastName || !formData.email || 
+        !formData.phoneNumber || !formData.password) {
+      setError("Please fill in all fields");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { confirmPassword, ...registerData } = formData;
+      const response = await authService.register(registerData);
+
+      if (response.statusCode === 201) {
+        setSuccess("Registration successful! Redirecting to login...");
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      }
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Registration failed. Please try again.";
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -34,6 +72,18 @@ const RegisterPage = () => {
         style={{ maxWidth: "600px" }}
       >
         <h3 className="text-center text-primary mb-4">Register Here</h3>
+
+        {error && (
+          <div className="alert alert-danger" role="alert">
+            {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="alert alert-success" role="alert">
+            {success}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           {/* First and Last Name */}
@@ -50,6 +100,7 @@ const RegisterPage = () => {
                 className="form-control"
                 value={formData.firstName}
                 placeholder="Enter first name"
+                required
               />
             </div>
             <div className="col">
@@ -64,6 +115,7 @@ const RegisterPage = () => {
                 className="form-control"
                 value={formData.lastName}
                 placeholder="Enter last name"
+                required
               />
             </div>
           </div>
@@ -82,6 +134,7 @@ const RegisterPage = () => {
                 className="form-control"
                 value={formData.email}
                 placeholder="Enter email"
+                required
               />
             </div>
             <div className="col">
@@ -96,6 +149,7 @@ const RegisterPage = () => {
                 className="form-control"
                 value={formData.phoneNumber}
                 placeholder="Enter phone number"
+                required
               />
             </div>
           </div>
@@ -114,6 +168,7 @@ const RegisterPage = () => {
                 className="form-control"
                 value={formData.password}
                 placeholder="Enter password"
+                required
               />
             </div>
             <div className="col">
@@ -128,19 +183,27 @@ const RegisterPage = () => {
                 className="form-control"
                 value={formData.confirmPassword}
                 placeholder="Confirm password"
+                required
               />
             </div>
           </div>
 
           <div className="d-grid">
-            <Button type="submit" variant="primary" size="md">
-              Register
+            <Button type="submit" variant="primary" disabled={loading}>
+              {loading ? "Registering..." : "Register"}
             </Button>
           </div>
         </form>
+
+        <p className="text-center mt-3 mb-0">
+          Already have an account?{" "}
+          <Link to="/login" className="registerText">
+            <small>login here</small>
+          </Link>
+        </p>
       </div>
     </div>
   );
 };
 
-export default RegisterPage ;
+export default RegisterPage;

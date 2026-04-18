@@ -1,7 +1,7 @@
 // pages/NotFoundPage.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "../ui/Button/TButton";
+import Button from "react-bootstrap/Button";
 
 const NotFoundPage: React.FC = () => {
   const navigate = useNavigate();

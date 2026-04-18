@@ -8,34 +8,35 @@ class SocketConnection {
   }
 
   private startSocket = () => {
-    this.socket.on("connection", (socket: io.Socket) => {
+    this.socket.on("connection", (socket: any) => {
       const socketId = socket.id;
+      const user = socket.user;
 
       console.log({
         id: socket.id,
         connected: socket.connected,
         rooms: Array.from(socket.rooms),
+        user,
         handshake: {
           auth: socket.handshake.auth,
-          // query: socket.handshake.query,
-          // headers: socket.handshake.headers,
-          address: socket.handshake.address,
-          time: socket.handshake.time,
         },
       });
 
       // notifying user of successful connection
       socket.emit("welcome", {
         statusCode: 200,
-        message: "Successfully connected to the server",
-        socketId: socketId,
+        message: "Successfully connected to the socket",
+        data: { ...user, socketId: socketId },
       });
+
+      // join room
+      socket.join("personalChat")
 
       socket.on("sendMsg", (data: any) => {
         console.log(`Message received from ${socketId}:`, data);
         socket.emit("recMsg", {
-          ...data,
-          msgFromServer:"Your msg received by server"
+          data,
+          msgFromServer: "Your msg received by server",
         });
       });
 

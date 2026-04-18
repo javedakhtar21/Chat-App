@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Toastify } from "../../ui/Toast/TToast";
-import Button from "../../ui/Button/TButton";
-import Input from "../../ui/Input/TInput";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import Alert from "react-bootstrap/Alert";
 
 interface INewContactModalProps {
   open: boolean;
@@ -14,17 +14,18 @@ export const NewContactModal: React.FC<INewContactModalProps> = ({
 }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [alert, setAlert] = useState<{ variant: string; message: string } | null>(null);
 
   const onSaveContact = () => {
     if (!name || !phone) {
-      Toastify.showAlert("danger", "Please fill all fields");
+      setAlert({ variant: "danger", message: "Please fill all fields" });
       return;
     }
 
     console.log("Saving Contact:", { name, phone });
 
-    onOpenChange(); // close modal
-    Toastify.showAlert("info", `${name} Saved Successfully!`, 3000);
+    onOpenChange();
+    setAlert({ variant: "info", message: `${name} Saved Successfully!` });
   };
 
   return (
@@ -41,7 +42,6 @@ export const NewContactModal: React.FC<INewContactModalProps> = ({
           style={{ maxWidth: "400px", width: "100%" }}
         >
           <div className="modal-content p-3">
-            {/* Header */}
             <div className="modal-header">
               <h5 className="modal-title">New Contact</h5>
               <button
@@ -51,27 +51,22 @@ export const NewContactModal: React.FC<INewContactModalProps> = ({
               >x</button>
             </div>
 
-            {/* Body */}
             <div className="modal-body d-flex flex-column gap-3">
-              <Input
+              <Form.Control
                 type="text"
                 placeholder="Enter name"
                 value={name}
-                onChange={setName}
-                variant="default"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
               />
 
-              <Input
+              <Form.Control
                 type="tel"
                 placeholder="Enter phone number"
                 value={phone}
-                onChange={setPhone}
-                variant="default"
-
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhone(e.target.value)}
               />
             </div>
 
-            {/* Footer */}
             <div className="modal-footer d-flex justify-content-end">
               <Button variant="danger" size="sm" onClick={onOpenChange}>
                 Cancel
@@ -84,6 +79,21 @@ export const NewContactModal: React.FC<INewContactModalProps> = ({
           </div>
         </div>
       </div>
+
+      {alert && (
+        <div
+          className="position-fixed bottom-0 end-0 p-3"
+          style={{ zIndex: 9999 }}
+        >
+          <Alert
+            variant={alert.variant}
+            onClose={() => setAlert(null)}
+            dismissible
+          >
+            {alert.message}
+          </Alert>
+        </div>
+      )}
     </>
   );
 };
