@@ -11,6 +11,8 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { EnumProfileFormMode } from "../features/users/types";
 import type { ProfileFormData } from "../features/users/types";
+import { statesService } from "../Utils/Data/State";
+import type { IState } from "../Utils/Data/State";
 
 const initialProfileFormDataState = {
   firstName: "",
@@ -36,9 +38,36 @@ const ProfilePage: React.FC = () => {
     initialProfileFormDataState,
   );
 
+  const [states, setStates] = useState<IState[]>([]);
+  // const [cities, setCitieses] = useState([]);
+  const [errorCityState, setErrorCityState] = useState("");
+
   const [successMsg, setSuccessMsg] = useState("");
 
   const currentUser = authService.getCurrentUser();
+
+  useEffect(() => {
+    const fetchStates = async () => {
+      try {
+        const response = await statesService.getStates();
+        if (response.success) {
+          setStates(response?.data);
+        }
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setErrorCityState(error.message);
+        }
+        console.log("Error fetching states: ", error);
+      }
+    };
+
+    fetchStates();
+  }, []);
+
+  useEffect(() => {
+    console.log("states: ", states);
+    console.error("Error in fetching states: ", errorCityState);
+  }, [states, errorCityState]);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -107,7 +136,7 @@ const ProfilePage: React.FC = () => {
     try {
       setEditLoading(true);
       const response = await userService.updateUserDetails(
-        userId,
+        Number(userId),
         profileFormData,
       );
       setUser(response || null);
@@ -399,15 +428,25 @@ const ProfilePage: React.FC = () => {
                   //   {user?.state || "NA"}
                   // </Col>
 
+                  // <Col sm={8}>
+                  //   <input
+                  //     type="text"
+                  //     disabled={true}
+                  //     className="form-control"
+                  //     value={profileFormData?.state}
+                  //     name="state"
+                  //     onChange={handleProfileFormChange}
+                  //   />
+                  // </Col>
+
                   <Col sm={8}>
-                    <input
-                      type="text"
-                      disabled={true}
-                      className="form-control"
-                      value={profileFormData?.state}
-                      name="state"
-                      onChange={handleProfileFormChange}
-                    />
+                    <select name="states" id="" className="form-select form-control">
+                      {states &&
+                        states.length >= 1 &&
+                        states.map((s) => {
+                          return <option value={s.name}>{s.name}</option>;
+                        })}
+                    </select>
                   </Col>
                 )}
               </Row>

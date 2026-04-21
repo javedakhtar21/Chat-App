@@ -68,7 +68,7 @@ class StateController {
   getStates = async (req: Request, res: Response) => {
     try {
       const states = await stateService.getStates();
-
+      debugger;
       res.status(200).json({
         success: true,
         message: states.length

@@ -23,6 +23,15 @@ class CityService {
       throw new Error("stateId is required");
     }
 
+    const existingCityFound = await CityModel.findOne({ name: name });
+    console.log("Existing city: ",existingCityFound)
+    const iscityExistAlready = !!existingCityFound;
+
+    if (iscityExistAlready) {
+      const error: any = new Error("City already exists");
+      error.data = existingCityFound;
+      throw error;
+    }
     const cityId = await this.getNextId("cityId");
 
     const city = await CityModel.create({

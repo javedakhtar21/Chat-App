@@ -15,7 +15,7 @@ class CityController {
       res.status(400).json({
         success: false,
         message: error.message || "Failed to create city",
-        data: null,
+        data: error.data|| null,
       });
     }
   };
