@@ -67,7 +67,7 @@ class AuthService {
     //   $or: [{ email }, { phoneNumber: email }],
     // });
 
-    const user= await UserModel.findOne({email: email});
+    const user= await UserModel.findOne({email: email}).select("+password");
 
     if (!user) {
       return {
