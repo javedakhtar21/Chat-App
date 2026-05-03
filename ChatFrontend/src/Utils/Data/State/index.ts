@@ -8,11 +8,10 @@ export interface IState {
   name: string;
 }
 
-class StatesService {   
+class StatesService {
   getStates = async () => {
     try {
       const response = await axios.get(`${API_URL}/states`);
-    //   debugger
       if (response) {
         return response?.data;
       }
@@ -23,6 +22,28 @@ class StatesService {
         );
       }
       throw new Error("Failed to fetch states");
+    }
+  };
+
+  getCitiesByState = async (selectedState: any) => {
+    try {
+      const id= selectedState.id
+      if (!id) {
+        console.log("State ID is needed to fetch the cities");
+        return;
+      }
+      const response = await axios.get(`${API_URL}/cities/state/${id}`);
+      if (response) {
+        return response?.data;
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(
+          error.response?.data?.message ||
+            "Failed to fetch the city by stateId",
+        );
+      }
+      throw new Error("Failed to fetch the city by stateId");
     }
   };
 }

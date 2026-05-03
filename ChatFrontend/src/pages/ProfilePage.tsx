@@ -39,7 +39,8 @@ const ProfilePage: React.FC = () => {
   );
 
   const [states, setStates] = useState<IState[]>([]);
-  // const [cities, setCitieses] = useState([]);
+  const [citiesOfTheState, setCitiesOfTheState] = useState([]);
+  const [citiesOfTheStateLoading, setCitiesOfTheStateLoading] = useState(false);
   const [errorCityState, setErrorCityState] = useState("");
 
   const [successMsg, setSuccessMsg] = useState("");
@@ -67,6 +68,8 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     console.log("states: ", states);
     console.error("Error in fetching states: ", errorCityState);
+
+    console.log("Citites are : ", citiesOfTheState);
   }, [states, errorCityState]);
 
   useEffect(() => {
@@ -150,6 +153,41 @@ const ProfilePage: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    console.log("current profile data: ", profileFormData);
+  }, [profileFormData]);
+
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        if (!profileFormData.state) return;
+
+        setCitiesOfTheStateLoading(true);
+
+        const selectedState = profileFormData.state.toLowerCase();
+
+        const matchedState = states.find(
+          (state: any) => state?.name?.toLowerCase() === selectedState,
+        );
+
+        if (!matchedState) return;
+
+        const response = await statesService.getCitiesByState(matchedState);
+
+        if (response?.success) {
+          setCitiesOfTheState(response.data);
+        }
+      } catch (error: any) {
+        console.error("Error: ", error.message);
+      } finally {
+        setCitiesOfTheStateLoading(false);
+      }
+    };
+
+    fetchCities();
+  }, [profileFormData.state, states]);
+
   if (loading) {
     return (
       <Container className="mt-5 text-center">
@@ -159,21 +197,6 @@ const ProfilePage: React.FC = () => {
       </Container>
     );
   }
-
-  // if (errorMsg || successMsg) {
-  //   return (
-  //     <Container className="mt-5">
-  //       <Card className="border-0 shadow-sm">
-  //         <Card.Body className="text-center py-5">
-  //           <h5 className="text-danger">{errorMsg || successMsg}</h5>
-  //           <Button variant="primary" onClick={handleBack} className="mt-3">
-  //             Back to Dashboard
-  //           </Button>
-  //         </Card.Body>
-  //       </Card>
-  //     </Container>
-  //   );
-  // }
 
   const isCurrentUser = currentUser?.userId === user?.userId;
 
@@ -384,13 +407,30 @@ const ProfilePage: React.FC = () => {
                 </Col>
                 {mode === EnumProfileFormMode.EDIT ? (
                   <Col sm={8}>
-                    <input
+                    {/* <input
                       type="text"
                       className="form-control"
                       value={profileFormData?.city}
                       name="city"
                       onChange={handleProfileFormChange}
-                    />
+                    /> */}
+
+                    <select
+                      value={profileFormData?.city}
+                      name="city"
+                      id=""
+                      className="form-select form-control"
+                      onChange={handleProfileFormChange}
+                    >
+                      <option value="">
+                        {citiesOfTheStateLoading ? "loading..." : "Select city"}
+                      </option>
+                      {Array.isArray(citiesOfTheState) &&
+                        citiesOfTheState.length > 0 &&
+                        citiesOfTheState.map((city: any) => {
+                          return <option value={city.name}>{city.name}</option>;
+                        })}
+                    </select>
                   </Col>
                 ) : (
                   // <Col sm={8} className="fw-semibold">
@@ -398,14 +438,30 @@ const ProfilePage: React.FC = () => {
                   // </Col>
 
                   <Col sm={8}>
-                    <input
+                    {/* <input
                       type="text"
                       disabled={true}
                       className="form-control"
                       value={profileFormData?.city}
                       name="city"
                       onChange={handleProfileFormChange}
-                    />
+                    /> */}
+                    <select
+                      name="city"
+                      value={profileFormData?.city}
+                      id=""
+                      className="form-select form-control"
+                      disabled={true}
+                    >
+                      <option value="">
+                        {citiesOfTheStateLoading ? "loading..." : "Select city"}
+                      </option>
+                      {Array.isArray(citiesOfTheState) &&
+                        citiesOfTheState.length > 0 &&
+                        citiesOfTheState.map((city: any) => {
+                          return <option value={city.name}>{city.name}</option>;
+                        })}
+                    </select>
                   </Col>
                 )}
               </Row>
@@ -415,13 +471,27 @@ const ProfilePage: React.FC = () => {
                 </Col>
                 {mode === EnumProfileFormMode.EDIT ? (
                   <Col sm={8}>
-                    <input
+                    {/* <input
                       type="text"
                       className="form-control"
                       value={profileFormData?.state}
                       name="state"
                       onChange={handleProfileFormChange}
-                    />
+                    /> */}
+
+                    <select
+                      name="state"
+                      id=""
+                      className="form-select form-control"
+                      onChange={handleProfileFormChange}
+                      value={profileFormData?.state}
+                    >
+                      {states &&
+                        states.length >= 1 &&
+                        states.map((s) => {
+                          return <option value={s.name}>{s.name}</option>;
+                        })}
+                    </select>
                   </Col>
                 ) : (
                   // <Col sm={8} className="fw-semibold">
@@ -440,7 +510,14 @@ const ProfilePage: React.FC = () => {
                   // </Col>
 
                   <Col sm={8}>
-                    <select name="states" id="" className="form-select form-control">
+                    <select
+                      name="state"
+                      id=""
+                      className="form-select form-control"
+                      onChange={handleProfileFormChange}
+                      value={profileFormData?.state}
+                      disabled={true}
+                    >
                       {states &&
                         states.length >= 1 &&
                         states.map((s) => {
