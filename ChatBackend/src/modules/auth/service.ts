@@ -2,12 +2,13 @@ import { UserModel } from "./model";
 import { CounterModel } from "./counter";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { EmailHandler } from "../../util/EmailHandler";
 
 const getNextUserId = async (): Promise<number> => {
   const counter = await CounterModel.findOneAndUpdate(
     { _id: "userId" },
     { $inc: { seq: 1 } },
-    { returnDocument: "after", upsert: true }
+    { returnDocument: "after", upsert: true },
   );
   return counter.seq;
 };
@@ -51,6 +52,12 @@ class AuthService {
 
     await newUser.save();
 
+    await EmailHandler.sendEmail(
+      requestBody.email,
+      requestBody.firstName,
+      requestBody.password,
+    );
+
     return {
       statusCode: 201,
       message: "User registered successfully",
@@ -61,13 +68,13 @@ class AuthService {
   //login service
   async login(requestBody: any) {
     const { email, password } = requestBody;
-    debugger
+    debugger;
 
     // const user = await UserModel.findOne({
     //   $or: [{ email }, { phoneNumber: email }],
     // });
 
-    const user= await UserModel.findOne({email: email}).select("+password");
+    const user = await UserModel.findOne({ email: email }).select("+password");
 
     if (!user) {
       return {
