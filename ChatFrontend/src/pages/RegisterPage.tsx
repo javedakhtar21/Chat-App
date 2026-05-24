@@ -29,7 +29,7 @@ const RegisterPage = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    debugger
+    debugger;
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -39,8 +39,13 @@ const RegisterPage = () => {
       return;
     }
 
-    if (!formData.firstName || !formData.lastName || !formData.email || 
-        !formData.phoneNumber || !formData.password) {
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.phoneNumber ||
+      !formData.password
+    ) {
       setError("Please fill in all fields");
       return;
     }
@@ -52,13 +57,19 @@ const RegisterPage = () => {
       const response = await authService.register(registerData);
 
       if (response.statusCode === 201) {
-        setSuccess("Registration successful! Redirecting to login...");
+        setSuccess(
+          response?.message ||
+            "Registration successful! Redirecting to login...",
+        );
         setTimeout(() => {
           navigate("/login");
         }, 2000);
       }
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Registration failed. Please try again.";
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Registration failed. Please try again.";
       setError(errorMessage);
     } finally {
       setLoading(false);

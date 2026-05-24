@@ -1,6 +1,8 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
+import path from "path";
+import fs from "fs";
 
 class EmailService {
   private transporter;
@@ -11,19 +13,34 @@ class EmailService {
     });
   }
 
-  sendEmail = async (email: String, name: String, password: String) => {
+  // this sends an email to the recepient
+  sendEmail = async (email: string, name: string, password: string) => {
     try {
       if (!email || !name || !password) {
         console.warn("Please provide email, password and name to send email");
         return;
       }
 
+      const welcomeRegisterationTemplatePath = path.join(
+        __dirname,
+        "../util/EmailTemplates/WelcomeEmail.html",
+      );
+      let welcomeRegisterationTemplateData = fs.readFileSync(
+        welcomeRegisterationTemplatePath,
+        "utf8",
+      );
+
+      welcomeRegisterationTemplateData = welcomeRegisterationTemplateData
+        .replace("{{NAME}}", name)
+        .replace("{{EMAIL}}", email)
+        .replace("{{PASSWORD}}", password);
 
       await this.transporter.sendMail({
         from: `"Talksy" ${process.env.GMAIL}`,
         to: `${email}`,
         subject: "Welcome email",
-        html: `<h3>Welcome ${name} and your email is :<strong>${email}</strong> and password is: <strong>${password}</strong></h3>`,
+        html: welcomeRegisterationTemplateData
+        // html: `<h3>Welcome ${name} and your email is :<strong>${email}</strong> and password is: <strong>${password}</strong></h3>`,
       });
       console.log("Email sent successfully");
     } catch (error: any) {

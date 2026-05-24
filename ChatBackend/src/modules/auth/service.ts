@@ -1,8 +1,9 @@
 import { UserModel } from "./model";
 import { CounterModel } from "./counter";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 import { EmailHandler } from "../../util/EmailHandler";
+import { TokenHandler } from "../../util/TokenHandler";
 
 const getNextUserId = async (): Promise<number> => {
   const counter = await CounterModel.findOneAndUpdate(
@@ -60,7 +61,8 @@ class AuthService {
 
     return {
       statusCode: 201,
-      message: "User registered successfully",
+      message:
+        "Account created successfully. Login credentials sent to your registered email address.",
       data: newUser,
     };
   }
@@ -69,10 +71,6 @@ class AuthService {
   async login(requestBody: any) {
     const { email, password } = requestBody;
     debugger;
-
-    // const user = await UserModel.findOne({
-    //   $or: [{ email }, { phoneNumber: email }],
-    // });
 
     const user = await UserModel.findOne({ email: email }).select("+password");
 
@@ -92,15 +90,20 @@ class AuthService {
       };
     }
 
-    const token = jwt.sign(
-      { userId: user.userId, email: user.email },
-      process.env.JWT_SECRET || "your-secret-key",
-      { expiresIn: "24h" },
-    );
+    // const token = jwt.sign(
+    //   { userId: user.userId, email: user.email },
+    //   process.env.JWT_SECRET || "your-secret-key",
+    //   { expiresIn: "24h" },
+    // );
+
+    const token = TokenHandler.createToken({
+      UserId: user.userId,
+      email: user.email,
+    });
 
     return {
       statusCode: 200,
-      message: "Login successful",
+      message: "Login successfull",
       token,
       user: {
         id: user._id,

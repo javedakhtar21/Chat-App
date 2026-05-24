@@ -10,6 +10,7 @@ export interface User {
   gender: string;
   createdAt?: string;
   updatedAt?: string;
+  message:string
 }
 
 export const EnumProfileFormMode = {

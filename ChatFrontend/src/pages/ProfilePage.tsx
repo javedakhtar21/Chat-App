@@ -70,7 +70,7 @@ const ProfilePage: React.FC = () => {
     console.error("Error in fetching states: ", errorCityState);
 
     console.log("Citites are : ", citiesOfTheState);
-  }, [states, errorCityState]);
+  }, [states, citiesOfTheState,errorCityState]);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -143,7 +143,7 @@ const ProfilePage: React.FC = () => {
         profileFormData,
       );
       setUser(response || null);
-      setSuccessMsg("User details updated successfully");
+      setSuccessMsg(response.message);
       setMode(EnumProfileFormMode.VIEW);
     } catch (error) {
       setErrorMsg("Failed to update user details");
