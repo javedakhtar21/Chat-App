@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { authService } from "../features/auth";
 import { customSocket } from "../socket";
-
+import { getToastErrorMessage, toast } from "../components/toast";
 const LoginPage = () => {
   const navigate = useNavigate();
   const initialState = {
@@ -12,7 +12,6 @@ const LoginPage = () => {
   };
   const [formData, setFormData] = useState(initialState);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -20,13 +19,12 @@ const LoginPage = () => {
       ...prev,
       [name]: value,
     }));
-    setError("");
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    toast.dismiss();
     setLoading(true);
-    setError("");
 
     try {
       const response = await authService.login(formData);
@@ -40,12 +38,11 @@ const LoginPage = () => {
           token: response.token,
         };
         customSocket.connect();
+        toast.success("Login successful");
         navigate("/user/dashboard");
       }
     } catch (err: unknown) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Login failed. Please try again.";
-      setError(errorMessage);
+      toast.error(getToastErrorMessage(err, "Login failed. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -58,12 +55,6 @@ const LoginPage = () => {
         style={{ maxWidth: "450px" }}
       >
         <h3 className="text-center text-primary mb-4">Welcome Back</h3>
-
-        {error && (
-          <div className="alert alert-danger" role="alert">
-            {error}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-3">

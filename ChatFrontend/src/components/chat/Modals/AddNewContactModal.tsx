@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import Alert from "react-bootstrap/Alert";
+import { toast } from "../../toast";
 
 interface INewContactModalProps {
   open: boolean;
@@ -14,18 +14,17 @@ export const NewContactModal: React.FC<INewContactModalProps> = ({
 }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [alert, setAlert] = useState<{ variant: string; message: string } | null>(null);
 
   const onSaveContact = () => {
+    toast.dismiss();
+
     if (!name || !phone) {
-      setAlert({ variant: "danger", message: "Please fill all fields" });
+      toast.warning("Please fill all contact fields");
       return;
     }
 
-    console.log("Saving Contact:", { name, phone });
-
     onOpenChange();
-    setAlert({ variant: "info", message: `${name} Saved Successfully!` });
+    toast.success(`${name} saved successfully`);
   };
 
   return (
@@ -80,20 +79,6 @@ export const NewContactModal: React.FC<INewContactModalProps> = ({
         </div>
       </div>
 
-      {alert && (
-        <div
-          className="position-fixed bottom-0 end-0 p-3"
-          style={{ zIndex: 9999 }}
-        >
-          <Alert
-            variant={alert.variant}
-            onClose={() => setAlert(null)}
-            dismissible
-          >
-            {alert.message}
-          </Alert>
-        </div>
-      )}
     </>
   );
 };

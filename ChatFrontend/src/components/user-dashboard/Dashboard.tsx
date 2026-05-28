@@ -9,6 +9,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
 import Dropdown from "react-bootstrap/Dropdown";
 import { customSocket } from "../../socket";
+import { getToastErrorMessage, toast } from "../toast";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -22,6 +23,8 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
+      toast.dismiss();
+
       try {
         const allUsers = await userService.getAllUsers();
         const filteredUsers = allUsers.filter(
@@ -29,17 +32,19 @@ const Dashboard: React.FC = () => {
         );
         setUsers(filteredUsers);
       } catch (error) {
-        console.error("Failed to fetch users:", error);
+        toast.error(getToastErrorMessage(error, "Failed to fetch users"));
       } finally {
         setLoading(false);
       }
     };
 
     fetchUsers();
-  }, []);
+  }, [currentUser?.id]);
 
   const handleLogout = () => {
+    toast.dismiss();
     authService.logout();
+    toast.success("Logged out successfully");
     navigate("/login");
   };
 
@@ -59,20 +64,22 @@ const Dashboard: React.FC = () => {
       .includes(searchText.toLowerCase()),
   );
 
-  const handleSendMsg = (e: any) => {
-    e.preventDefault();
+  const handleSendMsg = () => {
+    toast.dismiss();
+    const trimmedMessage = msg.trim();
 
-    if (msg) {
-      customSocket.emit("sendMsg", msg);
-      alert(`${msg}: sent`);
+    if (!trimmedMessage) {
+      toast.warning("Please enter a message before sending");
+      return;
     }
+
+    customSocket.emit("sendMsg", trimmedMessage);
+    toast.success("Message sent");
+    setMsg("");
   };
 
-  const handleMsgBox = (e: any) => {
+  const handleMsgBox = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    if (!value) {
-      alert("No any msg");
-    }
     setMsg(value);
   };
 
@@ -219,6 +226,7 @@ const Dashboard: React.FC = () => {
                     placeholder="type msg to send"
                     className="form-control"
                     name="msgbox"
+                    value={msg}
                   />
                   <button className="btn btn-primary" onClick={handleSendMsg}>
                     Send

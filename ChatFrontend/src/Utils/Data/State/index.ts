@@ -25,12 +25,11 @@ class StatesService {
     }
   };
 
-  getCitiesByState = async (selectedState: any) => {
+  getCitiesByState = async (selectedState: IState) => {
     try {
-      const id= selectedState.id
+      const id = selectedState.id;
       if (!id) {
-        console.log("State ID is needed to fetch the cities");
-        return;
+        throw new Error("State ID is needed to fetch cities");
       }
       const response = await axios.get(`${API_URL}/cities/state/${id}`);
       if (response) {

@@ -7,6 +7,7 @@ import {
   FaUsers,
   FaRegStickyNote,
 } from "react-icons/fa";
+import { toast } from "../../toast";
 
 interface IFilterChatModalProps {
   open: boolean;
@@ -29,40 +30,9 @@ export const FilterChatModal: React.FC<IFilterChatModalProps> = ({
   w-100
 `;
 
-  // ✅ Each filter has its OWN function (Future safe)
-  const handleUnread = () => {
-    console.log("Apply Unread Filter");
-    // alert("Unread filter applied");
-    onOpenChange();
-  };
-
-  const handleFavorites = () => {
-    console.log("Apply Favorites Filter");
-    // alert("Favorites filter applied");
-    onOpenChange();
-  };
-
-  const handleContacts = () => {
-    console.log("Apply Contacts Filter");
-    // alert("Contacts filter applied");
-    onOpenChange();
-  };
-
-  const handleNonContacts = () => {
-    console.log("Apply Non-Contacts Filter");
-    // alert("Non-contacts filter applied");
-    onOpenChange();
-  };
-
-  const handleGroups = () => {
-    console.log("Apply Groups Filter");
-    // alert("Groups filter applied")/;
-    onOpenChange();
-  };
-
-  const handleDrafts = () => {
-    console.log("Apply Drafts Filter");
-    // alert("Drafts filter applied");
+  const handleApplyFilter = (label: string) => {
+    toast.dismiss();
+    toast.info(`${label} filter applied`);
     onOpenChange();
   };
 
@@ -71,28 +41,23 @@ export const FilterChatModal: React.FC<IFilterChatModalProps> = ({
     {
       label: "Unread",
       icon: <FaEnvelopeOpenText size={14} />,
-      onClick: handleUnread,
     },
     {
       label: "Favorites",
       icon: <FaHeart size={14} />,
-      onClick: handleFavorites,
     },
     {
       label: "Contacts",
       icon: <FaAddressBook size={14} />,
-      onClick: handleContacts,
     },
     {
       label: "Non-contacts",
       icon: <FaUserAltSlash size={14} />,
-      onClick: handleNonContacts,
     },
-    { label: "Groups", icon: <FaUsers size={14} />, onClick: handleGroups },
+    { label: "Groups", icon: <FaUsers size={14} /> },
     {
       label: "Drafts",
       icon: <FaRegStickyNote size={14} />,
-      onClick: handleDrafts,
     },
   ];
 
@@ -168,7 +133,7 @@ export const FilterChatModal: React.FC<IFilterChatModalProps> = ({
                 <span
                   key={index}
                   className={cssOfOptions}
-                  onClick={opt.onClick}
+                  onClick={() => handleApplyFilter(opt.label)}
                 >
                   {opt.icon} {opt.label}
                 </span>

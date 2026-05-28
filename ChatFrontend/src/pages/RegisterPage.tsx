@@ -2,6 +2,7 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../features/auth";
+import { getToastErrorMessage, toast } from "../components/toast";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -15,8 +16,6 @@ const RegisterPage = () => {
   };
   const [formData, setFormData] = useState(initialState);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -24,18 +23,14 @@ const RegisterPage = () => {
       ...prev,
       [name]: value,
     }));
-    setError("");
-    setSuccess("");
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    debugger;
     e.preventDefault();
-    setError("");
-    setSuccess("");
+    toast.dismiss();
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      toast.warning("Passwords do not match");
       return;
     }
 
@@ -46,7 +41,7 @@ const RegisterPage = () => {
       !formData.phoneNumber ||
       !formData.password
     ) {
-      setError("Please fill in all fields");
+      toast.warning("Please fill in all fields");
       return;
     }
 
@@ -57,7 +52,7 @@ const RegisterPage = () => {
       const response = await authService.register(registerData);
 
       if (response.statusCode === 201) {
-        setSuccess(
+        toast.success(
           response?.message ||
             "Registration successful! Redirecting to login...",
         );
@@ -66,11 +61,9 @@ const RegisterPage = () => {
         }, 2000);
       }
     } catch (err: unknown) {
-      const errorMessage =
-        err instanceof Error
-          ? err.message
-          : "Registration failed. Please try again.";
-      setError(errorMessage);
+      toast.error(
+        getToastErrorMessage(err, "Registration failed. Please try again."),
+      );
     } finally {
       setLoading(false);
     }
@@ -83,18 +76,6 @@ const RegisterPage = () => {
         style={{ maxWidth: "600px" }}
       >
         <h3 className="text-center text-primary mb-4">Register Here</h3>
-
-        {error && (
-          <div className="alert alert-danger" role="alert">
-            {error}
-          </div>
-        )}
-
-        {success && (
-          <div className="alert alert-success" role="alert">
-            {success}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit}>
           {/* First and Last Name */}

@@ -13,6 +13,7 @@ import { EnumProfileFormMode } from "../features/users/types";
 import type { ProfileFormData } from "../features/users/types";
 import { statesService } from "../Utils/Data/State";
 import type { IState } from "../Utils/Data/State";
+import { getToastErrorMessage, toast } from "../components/toast";
 
 const initialProfileFormDataState = {
   firstName: "",
@@ -32,7 +33,6 @@ const ProfilePage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [editLoading, setEditLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
   const [mode, setMode] = useState(EnumProfileFormMode.VIEW);
   const [profileFormData, setProfileFormData] = useState<ProfileFormData>(
     initialProfileFormDataState,
@@ -41,24 +41,20 @@ const ProfilePage: React.FC = () => {
   const [states, setStates] = useState<IState[]>([]);
   const [citiesOfTheState, setCitiesOfTheState] = useState([]);
   const [citiesOfTheStateLoading, setCitiesOfTheStateLoading] = useState(false);
-  const [errorCityState, setErrorCityState] = useState("");
-
-  const [successMsg, setSuccessMsg] = useState("");
 
   const currentUser = authService.getCurrentUser();
 
   useEffect(() => {
     const fetchStates = async () => {
+      toast.dismiss();
+
       try {
         const response = await statesService.getStates();
         if (response.success) {
           setStates(response?.data);
         }
       } catch (error: unknown) {
-        if (error instanceof Error) {
-          setErrorCityState(error.message);
-        }
-        console.log("Error fetching states: ", error);
+        toast.error(getToastErrorMessage(error, "Failed to fetch states"));
       }
     };
 
@@ -66,16 +62,11 @@ const ProfilePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log("states: ", states);
-    console.error("Error in fetching states: ", errorCityState);
-
-    console.log("Citites are : ", citiesOfTheState);
-  }, [states, citiesOfTheState,errorCityState]);
-
-  useEffect(() => {
     const fetchUserDetails = async () => {
+      toast.dismiss();
+
       if (!userId) {
-        setErrorMsg("User ID not provided");
+        toast.warning("User ID not provided");
         setLoading(false);
         return;
       }
@@ -95,8 +86,7 @@ const ProfilePage: React.FC = () => {
           });
         }
       } catch (err) {
-        setErrorMsg("Failed to load user details");
-        console.error(err);
+        toast.error(getToastErrorMessage(err, "Failed to load user details"));
       } finally {
         setLoading(false);
       }
@@ -106,7 +96,9 @@ const ProfilePage: React.FC = () => {
   }, [userId]);
 
   const handleLogout = () => {
+    toast.dismiss();
     authService.logout();
+    toast.success("Logged out successfully");
     navigate("/login");
   };
 
@@ -115,7 +107,9 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleEdit = () => {
+    toast.dismiss();
     setMode(EnumProfileFormMode.EDIT);
+    toast.info("Profile edit mode enabled");
   };
 
   const handleProfileFormChange = (
@@ -136,6 +130,8 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleSaveChanges = async () => {
+    toast.dismiss();
+
     try {
       setEditLoading(true);
       const response = await userService.updateUserDetails(
@@ -143,23 +139,19 @@ const ProfilePage: React.FC = () => {
         profileFormData,
       );
       setUser(response || null);
-      setSuccessMsg(response.message);
+      toast.success(response.message || "Profile updated successfully");
       setMode(EnumProfileFormMode.VIEW);
     } catch (error) {
-      setErrorMsg("Failed to update user details");
-      console.error(error);
+      toast.error(getToastErrorMessage(error, "Failed to update user details"));
     } finally {
       setEditLoading(false);
     }
   };
 
   useEffect(() => {
-    console.log("current profile data: ", profileFormData);
-  }, [profileFormData]);
-
-
-  useEffect(() => {
     const fetchCities = async () => {
+      toast.dismiss();
+
       try {
         if (!profileFormData.state) return;
 
@@ -168,7 +160,7 @@ const ProfilePage: React.FC = () => {
         const selectedState = profileFormData.state.toLowerCase();
 
         const matchedState = states.find(
-          (state: any) => state?.name?.toLowerCase() === selectedState,
+          (state) => state?.name?.toLowerCase() === selectedState,
         );
 
         if (!matchedState) return;
@@ -178,8 +170,8 @@ const ProfilePage: React.FC = () => {
         if (response?.success) {
           setCitiesOfTheState(response.data);
         }
-      } catch (error: any) {
-        console.error("Error: ", error.message);
+      } catch (error: unknown) {
+        toast.error(getToastErrorMessage(error, "Failed to fetch cities"));
       } finally {
         setCitiesOfTheStateLoading(false);
       }
@@ -211,9 +203,6 @@ const ProfilePage: React.FC = () => {
           <Card className="border-0 shadow-sm">
             <Card.Header className="bg-white">
               <div className="text-center">
-                <p className={`${successMsg ? "text-success" : "text-danger"}`}>
-                  {successMsg?.toUpperCase() || errorMsg?.toUpperCase()}
-                </p>
                 <div
                   className="rounded-circle bg-dark text-white d-inline-flex align-items-center justify-content-center mx-auto mb-2"
                   style={{ width: "100px", height: "100px", fontSize: "36px" }}
