@@ -7,3 +7,37 @@
     text-decoration: underline;
     color: blue;
 }
+
+.auth-split-section {
+    width: 100%;
+}
+
+.auth-brand-panel {
+    background: linear-gradient(135deg, #5e40f2 0%, #0d6efd 100%) !important;
+    color: #ffffff !important;
+    min-height: 320px;
+}
+
+.auth-logo-mark {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+}
+
+.register-form-column {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .auth-split-section {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+        width: 50% !important;
+    }
+
+    .register-form-column {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+        width: 50% !important;
+    }
+}

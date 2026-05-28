@@ -23,8 +23,6 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      toast.dismiss();
-
       try {
         const allUsers = await userService.getAllUsers();
         const filteredUsers = allUsers.filter(

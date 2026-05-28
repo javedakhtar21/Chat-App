@@ -3,6 +3,7 @@ import { Suspense, lazy } from "react";
 
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const UserDashboard = lazy(
   () => import("./components/user-dashboard/Dashboard"),
@@ -32,6 +33,14 @@ const routes = createBrowserRouter([
     element: (
       <Suspense fallback={<FallbackComponent />}>
         <LoginPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/forgot-password",
+    element: (
+      <Suspense fallback={<FallbackComponent />}>
+        <ForgotPassword />
       </Suspense>
     ),
   },

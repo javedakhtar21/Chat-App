@@ -69,132 +69,202 @@ const RegisterPage = () => {
     }
   };
 
+  const passwordsDoNotMatch =
+    Boolean(formData.confirmPassword) &&
+    formData.password !== formData.confirmPassword;
+
   return (
-    <div className="container mt-5">
-      <div
-        className="card shadow-sm p-4 rounded-4 mx-auto"
-        style={{ maxWidth: "600px" }}
-      >
-        <h3 className="text-center text-primary mb-4">Register Here</h3>
+    <main className="container-fluid bg-light">
+      <div className="row min-vh-100">
+          <section className="auth-split-section auth-brand-panel d-flex align-items-center justify-content-center p-4 p-lg-5">
+            <div className="w-100" style={{ maxWidth: "520px" }}>
+              <div className="d-inline-flex align-items-center gap-3 mb-4">
+                <div
+                  className="auth-logo-mark bg-white text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold shadow"
+                >
+                  T
+                </div>
+                <span className="fs-3 fw-bold">Talksy</span>
+              </div>
+              <h1 className="display-6 fw-bold mb-3">Create your account</h1>
+              <p className="lead mb-4 opacity-75">
+                Join Talksy to discover people, manage your profile, and keep
+                your chats organized in a simple modern dashboard.
+              </p>
+              <div className="row g-3">
+                <div className="col-6">
+                  <div className="border-0 rounded-4 p-3 bg-white text-dark shadow-sm h-100">
+                    <p className="h4 fw-bold mb-1 text-primary">24/7</p>
+                    <small className="text-muted">Stay connected</small>
+                  </div>
+                </div>
+                <div className="col-6">
+                  <div className="border-0 rounded-4 p-3 bg-white text-dark shadow-sm h-100">
+                    <p className="h4 fw-bold mb-1 text-primary">Easy</p>
+                    <small className="text-muted">Profile setup</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
 
-        <form onSubmit={handleSubmit}>
-          {/* First and Last Name */}
-          <div className="row mb-3">
-            <div className="col">
-              <label htmlFor="firstName" className="form-label">
-                First Name
-              </label>
-              <input
-                type="text"
-                name="firstName"
-                id="firstName"
-                onChange={handleInputChange}
-                className="form-control"
-                value={formData.firstName}
-                placeholder="Enter first name"
-                required
-              />
-            </div>
-            <div className="col">
-              <label htmlFor="lastName" className="form-label">
-                Last Name
-              </label>
-              <input
-                type="text"
-                name="lastName"
-                id="lastName"
-                onChange={handleInputChange}
-                className="form-control"
-                value={formData.lastName}
-                placeholder="Enter last name"
-                required
-              />
-            </div>
-          </div>
+          <section className="auth-split-section d-flex align-items-center justify-content-center p-4 p-lg-5">
+            <div className="w-100" style={{ maxWidth: "640px" }}>
+              <div className="card border-0 shadow rounded-4">
+                <div className="card-body p-4">
+                  <div className="mb-3">
+                    <span className="badge rounded-pill text-bg-primary mb-2">
+                      Register
+                    </span>
+                    <h2 className="fw-bold mb-2">Start chatting today</h2>
+                    <p className="text-muted mb-0">
+                      Fill in your details to create your Talksy account.
+                    </p>
+                  </div>
 
-          {/* Email and Phone */}
-          <div className="row mb-3">
-            <div className="col">
-              <label htmlFor="email" className="form-label">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                onChange={handleInputChange}
-                className="form-control"
-                value={formData.email}
-                placeholder="Enter email"
-                required
-              />
-            </div>
-            <div className="col">
-              <label htmlFor="phoneNumber" className="form-label">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                name="phoneNumber"
-                id="phoneNumber"
-                onChange={handleInputChange}
-                className="form-control"
-                value={formData.phoneNumber}
-                placeholder="Enter phone number"
-                required
-              />
-            </div>
-          </div>
+                  <form onSubmit={handleSubmit} className="needs-validation">
+                    <div className="row g-3">
+                      <div className="col-12 col-md-6 register-form-column">
+                        <label
+                          htmlFor="firstName"
+                          className="form-label fw-semibold"
+                        >
+                          First Name
+                        </label>
+                        <input
+                          type="text"
+                          name="firstName"
+                          id="firstName"
+                          onChange={handleInputChange}
+                          className="form-control rounded-3"
+                          value={formData.firstName}
+                          placeholder="Enter first name"
+                          required
+                        />
+                      </div>
+                      <div className="col-12 col-md-6 register-form-column">
+                        <label
+                          htmlFor="lastName"
+                          className="form-label fw-semibold"
+                        >
+                          Last Name
+                        </label>
+                        <input
+                          type="text"
+                          name="lastName"
+                          id="lastName"
+                          onChange={handleInputChange}
+                          className="form-control rounded-3"
+                          value={formData.lastName}
+                          placeholder="Enter last name"
+                          required
+                        />
+                      </div>
 
-          {/* Password and Confirm Password */}
-          <div className="row mb-4">
-            <div className="col">
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                onChange={handleInputChange}
-                className="form-control"
-                value={formData.password}
-                placeholder="Enter password"
-                required
-              />
-            </div>
-            <div className="col">
-              <label htmlFor="confirmPassword" className="form-label">
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                name="confirmPassword"
-                id="confirmPassword"
-                onChange={handleInputChange}
-                className="form-control"
-                value={formData.confirmPassword}
-                placeholder="Confirm password"
-                required
-              />
-            </div>
-          </div>
+                      <div className="col-12 col-md-6 register-form-column">
+                        <label htmlFor="email" className="form-label fw-semibold">
+                          Email
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          id="email"
+                          onChange={handleInputChange}
+                          className="form-control rounded-3"
+                          value={formData.email}
+                          placeholder="Enter email"
+                          required
+                        />
+                      </div>
+                      <div className="col-12 col-md-6 register-form-column">
+                        <label
+                          htmlFor="phoneNumber"
+                          className="form-label fw-semibold"
+                        >
+                          Phone Number
+                        </label>
+                        <input
+                          type="tel"
+                          name="phoneNumber"
+                          id="phoneNumber"
+                          onChange={handleInputChange}
+                          className="form-control rounded-3"
+                          value={formData.phoneNumber}
+                          placeholder="Enter phone number"
+                          required
+                        />
+                      </div>
 
-          <div className="d-grid">
-            <Button type="submit" variant="primary" disabled={loading}>
-              {loading ? "Registering..." : "Register"}
-            </Button>
-          </div>
-        </form>
+                      <div className="col-12 col-md-6 register-form-column">
+                        <label
+                          htmlFor="password"
+                          className="form-label fw-semibold"
+                        >
+                          Password
+                        </label>
+                        <input
+                          type="password"
+                          name="password"
+                          id="password"
+                          onChange={handleInputChange}
+                          className="form-control rounded-3"
+                          value={formData.password}
+                          placeholder="Enter password"
+                          required
+                        />
+                      </div>
+                      <div className="col-12 col-md-6 register-form-column">
+                        <label
+                          htmlFor="confirmPassword"
+                          className="form-label fw-semibold"
+                        >
+                          Confirm Password
+                        </label>
+                        <input
+                          type="password"
+                          name="confirmPassword"
+                          id="confirmPassword"
+                          onChange={handleInputChange}
+                          className={`form-control rounded-3 ${
+                            passwordsDoNotMatch ? "is-invalid" : ""
+                          }`}
+                          value={formData.confirmPassword}
+                          placeholder="Confirm password"
+                          required
+                        />
+                        <div className="invalid-feedback">
+                          Passwords do not match.
+                        </div>
+                      </div>
+                    </div>
 
-        <p className="text-center mt-3 mb-0">
-          Already have an account?{" "}
-          <Link to="/login" className="registerText">
-            <small>login here</small>
-          </Link>
-        </p>
+                    <div className="d-grid mt-3">
+                      <Button
+                        type="submit"
+                        variant="primary"
+                        className="rounded-3 shadow-sm"
+                        disabled={loading}
+                      >
+                        {loading ? "Registering..." : "Create Account"}
+                      </Button>
+                    </div>
+                  </form>
+
+                  <p className="text-center mt-3 mb-0 text-muted">
+                    Already have an account?{" "}
+                    <Link
+                      to="/login"
+                      className="fw-semibold text-decoration-none"
+                    >
+                      Sign in
+                    </Link>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
       </div>
-    </div>
+    </main>
   );
 };
 
