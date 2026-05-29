@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 // import jwt from "jsonwebtoken";
 import { EmailHandler } from "../../util/EmailHandler";
 import { TokenHandler } from "../../util/TokenHandler";
+import { response } from "express";
 
 const getNextUserId = async (): Promise<number> => {
   const counter = await CounterModel.findOneAndUpdate(
@@ -113,6 +114,50 @@ class AuthService {
         email: user.email,
         phoneNumber: user.phoneNumber,
       },
+    };
+  }
+
+  async forgetPassword(requestBody: any) {
+    debugger
+    const { email } = requestBody;
+
+    if (!email) {
+      return {
+        statusCode: 400,
+        message: "Email is required",
+        data: null,
+      };
+    }
+
+    const user = await UserModel.findOne({ email: email });
+    if (!user) {
+      return {
+        statusCode: 404,
+        message: "User with the provided email does not exist",
+        data: null,
+      };
+    }
+
+    const token = TokenHandler.createToken(
+      {
+        userId: user.userId,
+        email: user.email,
+      },
+      { tokenExpiry: "15m" },
+    );
+
+    const resetLink = `${process.env.Frontend_URL}/reset-password?token=${token}`;
+
+    await EmailHandler.sendForgotPasswordEmail(
+      user.email,
+      user.firstName,
+      resetLink,
+    );
+
+    return {
+      statusCode: 200,
+      message: "Password reset link has been sent to your email address",
+      data: null,
     };
   }
 }

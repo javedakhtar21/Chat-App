@@ -14,9 +14,9 @@ class TokenService {
     }
   };
 
-  createToken = (data: any) => {
+  createToken = (data: any, options?: any) => {
     return JWT.sign(data, process.env.JWT_SECRET as string, {
-      expiresIn: "24h",
+      expiresIn: options.tokenExpiry || "24h",
     });
   };
 }

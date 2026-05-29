@@ -39,12 +39,48 @@ class EmailService {
         from: `"Talksy" ${process.env.GMAIL}`,
         to: `${email}`,
         subject: "Welcome email",
-        html: welcomeRegisterationTemplateData
+        html: welcomeRegisterationTemplateData,
         // html: `<h3>Welcome ${name} and your email is :<strong>${email}</strong> and password is: <strong>${password}</strong></h3>`,
       });
-      console.log("Email sent successfully");
+      console.log("Welcom Email sent successfully");
     } catch (error: any) {
       console.error("Error while sending email: ", error);
+    }
+  };
+
+  sendForgotPasswordEmail = async (
+    email: string,
+    name: string,
+    resetLink: string,
+  ) => {
+    debugger;
+    if (!email || !name) {
+      return "Please provide email and name to send forgot password email";
+    }
+    try {
+      const forgetPasswordTemplatePath = path.join(
+        __dirname,
+        "../util/EmailTemplates/ForgetPasswordEmail.html",
+      );
+      let forgetPasswordTemplateData = fs.readFileSync(
+        forgetPasswordTemplatePath,
+        "utf-8",
+      );
+
+      forgetPasswordTemplateData = forgetPasswordTemplateData
+        .replace("{{NAME}}", name)
+        .replace("{{EMAIL}}", email)
+        .replaceAll("{{RESET_LINK}}", resetLink);
+
+      await this.transporter.sendMail({
+        from: `"Talksy" ${process.env.GMAIL}`,
+        to: `${email}`,
+        subject: "Password Reset Request",
+        html: forgetPasswordTemplateData,
+      });
+      console.log("Forgot password email sent successfully");
+    } catch (error) {
+      console.error("Error while sending forgot password email: ", error);
     }
   };
 }
