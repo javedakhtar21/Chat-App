@@ -100,7 +100,7 @@ class AuthService {
     const token = TokenHandler.createToken({
       UserId: user.userId,
       email: user.email,
-    });
+    }, {tokenExpiry: "24h"});
 
     return {
       statusCode: 200,
@@ -118,7 +118,7 @@ class AuthService {
   }
 
   async forgetPassword(requestBody: any) {
-    debugger
+    debugger;
     const { email } = requestBody;
 
     if (!email) {
@@ -143,7 +143,7 @@ class AuthService {
         userId: user.userId,
         email: user.email,
       },
-      { tokenExpiry: "15m" },
+      { tokenExpiry: "2m" },
     );
 
     const resetLink = `${process.env.Frontend_URL}/reset-password?token=${token}`;
@@ -160,7 +160,68 @@ class AuthService {
       data: null,
     };
   }
+
+  async resetPassword(
+    token: string,
+    newPassword: string,
+    confirmPassword: string,
+  ) {
+    if (!token) {
+      return {
+        statusCode: 400,
+        message: "Token is required",
+        data: null,
+      };
+    }
+
+    if (!newPassword || !confirmPassword) {
+      return {
+        statusCode: 400,
+        message: "New password and confirm password are required",
+        data: null,
+      };
+    }
+
+    if (newPassword !== confirmPassword) {
+      return {
+        statusCode: 400,
+        message: "New password and confirm password do not match",
+        data: null,
+      };
+    }
+
+    const decodedData = TokenHandler.verifyToken(token);
+
+    if (!decodedData.status) {
+      return {
+        statusCode: 400,
+        message: decodedData.message || "Reset link is invalid or expired",
+        data: null,
+      };
+    }
+
+    const { userId } = decodedData?.data as { userId: number; email: string };
+
+    const user = await UserModel.findOne({ userId }).select("+password");
+
+    if (!user) {
+      return {
+        statusCode: 404,
+        message: "User not found",
+        data: null,
+      };
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    return {
+      statusCode: 200,
+      message: "Password has been reset successfully",
+      data: null,
+    };
+  }
 }
 
 export const authService = new AuthService();
-// export const login = new Register();

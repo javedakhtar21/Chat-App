@@ -10,6 +10,7 @@ import Form from "react-bootstrap/Form";
 import Dropdown from "react-bootstrap/Dropdown";
 import { customSocket } from "../../socket";
 import { getToastErrorMessage, toast } from "../toast";
+import LogoutConfirmModal from "../common/LogoutConfirmModal";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ const Dashboard: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState("");
+  // UI-only: controls visibility of the logout confirmation modal
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const currentUser = authService.getCurrentUser();
 
@@ -120,7 +123,11 @@ const Dashboard: React.FC = () => {
                 <Dropdown.Item onClick={handleViewProfile}>
                   View Profile
                 </Dropdown.Item>
-                <Dropdown.Item onClick={handleLogout} className="text-danger">
+                <Dropdown.Item
+                  // UI-only: open confirmation modal instead of logging out immediately
+                  onClick={() => setShowLogoutConfirm(true)}
+                  className="text-danger"
+                >
                   Logout
                 </Dropdown.Item>
               </Dropdown.Menu>
@@ -242,6 +249,17 @@ const Dashboard: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* UI-only: reusable logout confirmation modal */}
+      <LogoutConfirmModal
+        show={showLogoutConfirm}
+        onHide={() => setShowLogoutConfirm(false)}
+        onConfirm={() => {
+          setShowLogoutConfirm(false);
+          // Existing logout logic is invoked here, unchanged.
+          handleLogout();
+        }}
+      />
     </div>
   );
 };

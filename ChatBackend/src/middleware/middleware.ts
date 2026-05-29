@@ -11,11 +11,17 @@ export const socketAuthMiddleware = (socket: any, next: any) => {
   }
 
   const decodedData = TokenHandler.verifyToken(token);
-  if (!decodedData) {
-    return next(new Error("User data is not attached in token"));
+  // if (!decodedData) {
+  //   return next(new Error("User data is not attached in token"));
+  // }
+
+  if (!decodedData.status) {
+    return next(
+      new Error(decodedData.message || "User data is not attached in token"),
+    );
   }
 
-  socket.user = decodedData;
+  socket.user = decodedData.data;
 
   next();
 };

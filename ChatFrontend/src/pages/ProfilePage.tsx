@@ -5,15 +5,22 @@ import { authService } from "../features/auth";
 import { userService } from "../features/users";
 import type { User } from "../features/users/types";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import LogoutConfirmModal from "../components/common/LogoutConfirmModal";
 import { EnumProfileFormMode } from "../features/users/types";
 import type { ProfileFormData } from "../features/users/types";
 import { statesService } from "../Utils/Data/State";
 import type { IState } from "../Utils/Data/State";
 import { getToastErrorMessage, toast } from "../components/toast";
+import {
+  FaEnvelope,
+  FaPhoneAlt,
+  FaMapMarkerAlt,
+  FaUser,
+  FaSignOutAlt,
+  FaPencilAlt,
+} from "react-icons/fa";
 
 const initialProfileFormDataState = {
   firstName: "",
@@ -41,6 +48,8 @@ const ProfilePage: React.FC = () => {
   const [states, setStates] = useState<IState[]>([]);
   const [citiesOfTheState, setCitiesOfTheState] = useState([]);
   const [citiesOfTheStateLoading, setCitiesOfTheStateLoading] = useState(false);
+  // UI-only: controls visibility of the logout confirmation modal
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const currentUser = authService.getCurrentUser();
 
@@ -109,7 +118,6 @@ const ProfilePage: React.FC = () => {
   const handleEdit = () => {
     toast.dismiss();
     setMode(EnumProfileFormMode.EDIT);
-    toast.info("Profile edit mode enabled");
   };
 
   const handleProfileFormChange = (
@@ -182,376 +190,331 @@ const ProfilePage: React.FC = () => {
 
   if (loading) {
     return (
-      <Container className="mt-5 text-center">
+      // UI-only: full-height centered loader for consistent vertical alignment
+      <Container className="min-vh-100 d-flex flex-column align-items-center justify-content-center">
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
+        <p className="text-muted mt-3 mb-0">Loading profile...</p>
       </Container>
     );
   }
 
   const isCurrentUser = currentUser?.userId === user?.userId;
+  // UI-only: single flag to drive disabled state; behavior identical to the
+  // previous EDIT/VIEW duplicated inputs (inputs stay disabled outside EDIT).
+  const isEditing = mode === EnumProfileFormMode.EDIT;
 
   return (
-    <Container className="py-2">
-      <Button variant="dark" onClick={handleBack} className="mb-3">
-        Back
-      </Button>
+    // UI-only: two-section split layout matching the Reset Password page
+    <main className="container-fluid bg-light">
+      <div className="row min-vh-100">
+        {/* UI-only: LEFT — branding/identity panel */}
+        <section className="auth-split-section auth-brand-panel d-flex flex-column p-4 p-lg-5">
+          {/* UI-only: back button at the top of the brand panel */}
+          <Button
+            variant="light"
+            onClick={handleBack}
+            className="align-self-start rounded-3 mb-4"
+          >
+            &larr; Back
+          </Button>
 
-      <Row className="justify-content-center">
-        <Col md={8} lg={6}>
-          <Card className="border-0 shadow-sm">
-            <Card.Header className="bg-white">
-              <div className="text-center">
-                <div
-                  className="rounded-circle bg-dark text-white d-inline-flex align-items-center justify-content-center mx-auto mb-2"
-                  style={{ width: "100px", height: "100px", fontSize: "36px" }}
-                >
-                  {user?.firstName?.[0]}
-                  {user?.lastName?.[0]}
-                </div>
-                <h4 className="mb-1">
-                  {user?.firstName} {user?.lastName}
-                </h4>
-                <span className="badge bg-secondary">
-                  User ID: {user?.userId}
-                </span>
+          <div className="flex-grow-1 d-flex align-items-center justify-content-center">
+            <div className="w-100 text-center" style={{ maxWidth: "420px" }}>
+              <div
+                className="rounded-circle bg-white text-primary d-inline-flex align-items-center justify-content-center mx-auto mb-3 shadow fw-bold text-uppercase"
+                style={{ width: "120px", height: "120px", fontSize: "44px" }}
+              >
+                {user?.firstName?.[0]}
+                {user?.lastName?.[0]}
               </div>
-            </Card.Header>
-            <Card.Body>
-              <Row className="mb-3">
-                <Col sm={4} className="text-muted">
-                  First Name
-                </Col>
-                {mode === EnumProfileFormMode.EDIT ? (
-                  <Col sm={8}>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={profileFormData?.firstName}
-                      name="firstName"
-                      onChange={handleProfileFormChange}
-                    />
-                  </Col>
-                ) : (
-                  // <Col sm={8} className="fw-semibold">
-                  //   {user?.firstName}
-                  // </Col>
+              <h2 className="fw-bold mb-2">
+                {user?.firstName} {user?.lastName}
+              </h2>
+              <span className="badge rounded-pill bg-white text-primary mb-4">
+                User ID: {user?.userId}
+              </span>
 
-                  <Col sm={8}>
-                    <input
-                      type="text"
-                      disabled={true}
-                      className="form-control"
-                      value={profileFormData?.firstName}
-                      name="firstName"
-                      onChange={handleProfileFormChange}
-                    />
-                  </Col>
-                )}
-              </Row>
-              <Row className="mb-3">
-                <Col sm={4} className="text-muted">
-                  Last Name
-                </Col>
-                {mode === EnumProfileFormMode.EDIT ? (
-                  <Col sm={8}>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={profileFormData?.lastName}
-                      name="lastName"
-                      onChange={handleProfileFormChange}
-                    />
-                  </Col>
-                ) : (
-                  // <Col sm={8} className="fw-semibold">
-                  //   {user?.lastName}
-                  // </Col>
+              {/* UI-only: quick contact info list */}
+              <ul className="list-unstyled mb-0 text-start mx-auto d-flex flex-column gap-3">
+                <li className="d-flex align-items-start gap-3">
+                  <span className="mt-1">
+                    <FaEnvelope />
+                  </span>
+                  <div className="min-w-0">
+                    <small className="d-block opacity-75">Email</small>
+                    <span className="fw-semibold text-break">
+                      {user?.email || "NA"}
+                    </span>
+                  </div>
+                </li>
+                <li className="d-flex align-items-start gap-3">
+                  <span className="mt-1">
+                    <FaPhoneAlt />
+                  </span>
+                  <div className="min-w-0">
+                    <small className="d-block opacity-75">Phone</small>
+                    <span className="fw-semibold">
+                      {user?.phoneNumber || "NA"}
+                    </span>
+                  </div>
+                </li>
+                <li className="d-flex align-items-start gap-3">
+                  <span className="mt-1">
+                    <FaMapMarkerAlt />
+                  </span>
+                  <div className="min-w-0">
+                    <small className="d-block opacity-75">Location</small>
+                    <span className="fw-semibold">
+                      {[user?.city, user?.state].filter(Boolean).join(", ") ||
+                        "NA"}
+                    </span>
+                  </div>
+                </li>
+              </ul>
 
-                  <Col sm={8}>
-                    <input
-                      type="text"
-                      disabled={true}
-                      className="form-control"
-                      value={profileFormData?.lastName}
-                      name="lastName"
-                      onChange={handleProfileFormChange}
-                    />
-                  </Col>
-                )}
-              </Row>
-
-              <Row className="mb-3">
-                <Col sm={4} className="text-muted">
-                  Email
-                </Col>
-                {mode === EnumProfileFormMode.EDIT ? (
-                  <Col sm={8}>
-                    <input
-                      disabled={true}
-                      type="email"
-                      className="form-control"
-                      value={profileFormData?.email}
-                      name="email"
-                      onChange={handleProfileFormChange}
-                    />
-                  </Col>
-                ) : (
-                  // <Col sm={8} className="fw-semibold">
-                  //   {user?.email}
-                  // </Col>
-
-                  <Col sm={8}>
-                    <input
-                      disabled={true}
-                      type="email"
-                      className="form-control"
-                      value={profileFormData?.email}
-                      name="email"
-                      onChange={handleProfileFormChange}
-                    />
-                  </Col>
-                )}
-              </Row>
-              <Row className="mb-3">
-                <Col sm={4} className="text-muted">
-                  Phone Number
-                </Col>
-                {mode === EnumProfileFormMode.EDIT ? (
-                  <Col sm={8}>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={profileFormData?.phoneNumber}
-                      onChange={handleProfileFormChange}
-                      name="phoneNumber"
-                    />
-                  </Col>
-                ) : (
-                  // <Col sm={8} className="fw-semibold">
-                  //   {user?.phoneNumber}
-                  // </Col>
-
-                  <Col sm={8}>
-                    <input
-                      type="text"
-                      disabled={true}
-                      className="form-control"
-                      value={profileFormData?.phoneNumber}
-                      onChange={handleProfileFormChange}
-                      name="phoneNumber"
-                    />
-                  </Col>
-                )}
-              </Row>
-              <Row className="mb-3">
-                <Col sm={4} className="text-muted">
-                  Gender
-                </Col>
-                {mode === EnumProfileFormMode.EDIT ? (
-                  <Col sm={8}>
-                    <select
-                      // type="text"
-                      className="form-control form-select"
-                      value={profileFormData?.gender}
-                      name="gender"
-                      onChange={handleProfileFormChange}
-                    >
-                      <option value="">Select Gender</option>
-                      {genderOptions.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  </Col>
-                ) : (
-                  // <Col sm={8} className="fw-semibold">
-                  //   {user?.gender || "NA"}
-                  // </Col>
-
-                  <Col sm={8}>
-                    <select
-                      // type="text"
-                      className="form-control form-select"
-                      value={profileFormData?.gender}
-                      name="gender"
-                      disabled={true}
-                      // onChange={handleProfileFormChange}
-                    >
-                      <option value="">Select Gender</option>
-                      {genderOptions.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  </Col>
-                )}
-              </Row>
-              <Row className="mb-3">
-                <Col sm={4} className="text-muted">
-                  City
-                </Col>
-                {mode === EnumProfileFormMode.EDIT ? (
-                  <Col sm={8}>
-                    {/* <input
-                      type="text"
-                      className="form-control"
-                      value={profileFormData?.city}
-                      name="city"
-                      onChange={handleProfileFormChange}
-                    /> */}
-
-                    <select
-                      value={profileFormData?.city}
-                      name="city"
-                      id=""
-                      className="form-select form-control"
-                      onChange={handleProfileFormChange}
-                    >
-                      <option value="">
-                        {citiesOfTheStateLoading ? "loading..." : "Select city"}
-                      </option>
-                      {Array.isArray(citiesOfTheState) &&
-                        citiesOfTheState.length > 0 &&
-                        citiesOfTheState.map((city: any) => {
-                          return <option value={city.name}>{city.name}</option>;
-                        })}
-                    </select>
-                  </Col>
-                ) : (
-                  // <Col sm={8} className="fw-semibold">
-                  //   {user?.city || "NA"}
-                  // </Col>
-
-                  <Col sm={8}>
-                    {/* <input
-                      type="text"
-                      disabled={true}
-                      className="form-control"
-                      value={profileFormData?.city}
-                      name="city"
-                      onChange={handleProfileFormChange}
-                    /> */}
-                    <select
-                      name="city"
-                      value={profileFormData?.city}
-                      id=""
-                      className="form-select form-control"
-                      disabled={true}
-                    >
-                      <option value="">
-                        {citiesOfTheStateLoading ? "loading..." : "Select city"}
-                      </option>
-                      {Array.isArray(citiesOfTheState) &&
-                        citiesOfTheState.length > 0 &&
-                        citiesOfTheState.map((city: any) => {
-                          return <option value={city.name}>{city.name}</option>;
-                        })}
-                    </select>
-                  </Col>
-                )}
-              </Row>
-              <Row className="mb-3">
-                <Col sm={4} className="text-muted">
-                  State
-                </Col>
-                {mode === EnumProfileFormMode.EDIT ? (
-                  <Col sm={8}>
-                    {/* <input
-                      type="text"
-                      className="form-control"
-                      value={profileFormData?.state}
-                      name="state"
-                      onChange={handleProfileFormChange}
-                    /> */}
-
-                    <select
-                      name="state"
-                      id=""
-                      className="form-select form-control"
-                      onChange={handleProfileFormChange}
-                      value={profileFormData?.state}
-                    >
-                      {states &&
-                        states.length >= 1 &&
-                        states.map((s) => {
-                          return <option value={s.name}>{s.name}</option>;
-                        })}
-                    </select>
-                  </Col>
-                ) : (
-                  // <Col sm={8} className="fw-semibold">
-                  //   {user?.state || "NA"}
-                  // </Col>
-
-                  // <Col sm={8}>
-                  //   <input
-                  //     type="text"
-                  //     disabled={true}
-                  //     className="form-control"
-                  //     value={profileFormData?.state}
-                  //     name="state"
-                  //     onChange={handleProfileFormChange}
-                  //   />
-                  // </Col>
-
-                  <Col sm={8}>
-                    <select
-                      name="state"
-                      id=""
-                      className="form-select form-control"
-                      onChange={handleProfileFormChange}
-                      value={profileFormData?.state}
-                      disabled={true}
-                    >
-                      {states &&
-                        states.length >= 1 &&
-                        states.map((s) => {
-                          return <option value={s.name}>{s.name}</option>;
-                        })}
-                    </select>
-                  </Col>
-                )}
-              </Row>
-            </Card.Body>
-            {isCurrentUser && (
-              <Card.Footer className="bg-white">
-                <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                  {mode === EnumProfileFormMode.VIEW && (
-                    <Button variant="primary" onClick={handleEdit}>
-                      Edit Profile
-                    </Button>
-                  )}
-                  {mode === EnumProfileFormMode.EDIT && (
-                    <>
-                      <Button
-                        variant="outline-secondary"
-                        onClick={handleCancel}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        variant="primary"
-                        onClick={handleSaveChanges}
-                        disabled={editLoading}
-                      >
-                        {editLoading ? "Saving..." : "Save Changes"}
-                      </Button>
-                    </>
-                  )}
-                  <Button variant="danger" onClick={handleLogout}>
+              {isCurrentUser && (
+                <div className="d-grid mt-4">
+                  <Button
+                    variant="light"
+                    // UI-only: open confirmation modal instead of logging out immediately
+                    onClick={() => setShowLogoutConfirm(true)}
+                    className="rounded-3 d-inline-flex align-items-center justify-content-center gap-2"
+                  >
+                    <FaSignOutAlt />
                     Logout
                   </Button>
                 </div>
-              </Card.Footer>
-            )}
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* UI-only: RIGHT — details form section */}
+        <section className="auth-split-section d-flex align-items-center justify-content-center p-4 p-lg-5">
+          <div className="w-100" style={{ maxWidth: "640px" }}>
+            <Card className="border-0 shadow rounded-4">
+              {/* UI-only: card header with title + inline edit actions (tighter padding) */}
+              <Card.Header className="bg-white border-0 d-flex flex-wrap align-items-center justify-content-between gap-2 px-4 pt-3 pb-0">
+                <div>
+                  <h5 className="fw-bold mb-1">Profile Details</h5>
+                  <p className="text-muted small mb-0">
+                    {isEditing
+                      ? "Update your information and save changes."
+                      : "Your personal account information."}
+                  </p>
+                </div>
+                {isCurrentUser && (
+                  <div className="d-flex gap-2">
+                    {mode === EnumProfileFormMode.VIEW && (
+                      <Button
+                        variant="primary"
+                        onClick={handleEdit}
+                        className="rounded-3 shadow-sm d-inline-flex align-items-center gap-2"
+                      >
+                        <FaPencilAlt size={14} />
+                        Edit Profile
+                      </Button>
+                    )}
+                    {mode === EnumProfileFormMode.EDIT && (
+                      <>
+                        <Button
+                          variant="outline-secondary"
+                          onClick={handleCancel}
+                          className="rounded-3"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant="primary"
+                          onClick={handleSaveChanges}
+                          disabled={editLoading}
+                          className="rounded-3 shadow-sm"
+                        >
+                          {editLoading ? "Saving..." : "Save Changes"}
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                )}
+              </Card.Header>
+
+              {/* UI-only: tighter padding to reduce overall vertical height */}
+              <Card.Body className="p-4">
+                {/* UI-only: section — Personal Information */}
+                <div className="d-flex align-items-center gap-2 text-uppercase text-muted small fw-semibold mb-2">
+                  <FaUser size={13} />
+                  Personal Information
+                </div>
+                {/* UI-only: responsive 2-column grid (md+ side-by-side, mobile stacks) */}
+                <div className="row g-3">
+                  {/* UI-only: register-form-column forces true 50% width at md+ (overrides PrimeFlex) */}
+                  <div className="col-12 col-md-6 register-form-column">
+                    <label
+                      htmlFor="firstName"
+                      className="form-label fw-semibold"
+                    >
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      className="form-control rounded-3"
+                      value={profileFormData?.firstName}
+                      name="firstName"
+                      onChange={handleProfileFormChange}
+                      disabled={!isEditing}
+                    />
+                  </div>
+
+                  <div className="col-12 col-md-6 register-form-column">
+                    <label htmlFor="lastName" className="form-label fw-semibold">
+                      Last Name
+                    </label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      className="form-control rounded-3"
+                      value={profileFormData?.lastName}
+                      name="lastName"
+                      onChange={handleProfileFormChange}
+                      disabled={!isEditing}
+                    />
+                  </div>
+
+                  <div className="col-12 col-md-6 register-form-column">
+                    <label htmlFor="email" className="form-label fw-semibold">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      className="form-control rounded-3"
+                      value={profileFormData?.email}
+                      name="email"
+                      onChange={handleProfileFormChange}
+                      disabled={true}
+                    />
+                    {/* UI-only: clarify why email is locked */}
+                    <small className="text-muted">Email cannot be changed.</small>
+                  </div>
+
+                  <div className="col-12 col-md-6 register-form-column">
+                    <label
+                      htmlFor="phoneNumber"
+                      className="form-label fw-semibold"
+                    >
+                      Phone Number
+                    </label>
+                    <input
+                      type="text"
+                      id="phoneNumber"
+                      className="form-control rounded-3"
+                      value={profileFormData?.phoneNumber}
+                      name="phoneNumber"
+                      onChange={handleProfileFormChange}
+                      disabled={!isEditing}
+                    />
+                  </div>
+
+                  <div className="col-12 col-md-6 register-form-column">
+                    <label htmlFor="gender" className="form-label fw-semibold">
+                      Gender
+                    </label>
+                    <select
+                      id="gender"
+                      className="form-select rounded-3"
+                      value={profileFormData?.gender}
+                      name="gender"
+                      onChange={handleProfileFormChange}
+                      disabled={!isEditing}
+                    >
+                      <option value="">Select Gender</option>
+                      {genderOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* UI-only: section — Location (reduced top margin to save height) */}
+                <div className="d-flex align-items-center gap-2 text-uppercase text-muted small fw-semibold mt-3 mb-2">
+                  <FaMapMarkerAlt size={13} />
+                  Location
+                </div>
+                {/* UI-only: responsive 2-column grid (md+ side-by-side, mobile stacks) */}
+                <div className="row g-3">
+                  <div className="col-12 col-md-6 register-form-column">
+                    <label htmlFor="state" className="form-label fw-semibold">
+                      State
+                    </label>
+                    <select
+                      id="state"
+                      name="state"
+                      className="form-select rounded-3"
+                      onChange={handleProfileFormChange}
+                      value={profileFormData?.state}
+                      disabled={!isEditing}
+                    >
+                      {states &&
+                        states.length >= 1 &&
+                        states.map((s) => {
+                          return (
+                            <option key={s.name} value={s.name}>
+                              {s.name}
+                            </option>
+                          );
+                        })}
+                    </select>
+                  </div>
+
+                  <div className="col-12 col-md-6 register-form-column">
+                    <label htmlFor="city" className="form-label fw-semibold">
+                      City
+                    </label>
+                    <select
+                      id="city"
+                      value={profileFormData?.city}
+                      name="city"
+                      className="form-select rounded-3"
+                      onChange={handleProfileFormChange}
+                      disabled={!isEditing}
+                    >
+                      <option value="">
+                        {citiesOfTheStateLoading ? "loading..." : "Select city"}
+                      </option>
+                      {Array.isArray(citiesOfTheState) &&
+                        citiesOfTheState.length > 0 &&
+                        citiesOfTheState.map((city: any) => {
+                          return (
+                            <option key={city.name} value={city.name}>
+                              {city.name}
+                            </option>
+                          );
+                        })}
+                    </select>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+        </section>
+      </div>
+
+      {/* UI-only: reusable logout confirmation modal */}
+      <LogoutConfirmModal
+        show={showLogoutConfirm}
+        onHide={() => setShowLogoutConfirm(false)}
+        onConfirm={() => {
+          setShowLogoutConfirm(false);
+          // Existing logout logic is invoked here, unchanged.
+          handleLogout();
+        }}
+      />
+    </main>
   );
 };
 

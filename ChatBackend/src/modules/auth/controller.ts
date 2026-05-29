@@ -36,6 +36,22 @@ class AuthController {
     const response= await authService.forgetPassword(requestBody);
     res.status(response.statusCode).json(response);
   }
+
+  public resetPassword = async (req: Request, res: Response): Promise<void> => {
+    const requestBody = req.body;
+    if (!requestBody) {
+      res.status(400).json({ message: "Request body is missing" });
+      return;
+    }
+
+    const { token, newPassword, confirmPassword } = requestBody;
+    const response = await authService.resetPassword(
+      token,
+      newPassword,
+      confirmPassword,
+    );
+    res.status(response.statusCode).json(response);
+  };
 }
 
 export const                                                                                                                                                                    authController = new AuthController();

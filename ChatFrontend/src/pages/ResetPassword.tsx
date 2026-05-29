@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { Link } from "react-router-dom";
-import Alert from "react-bootstrap/Alert";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import axios from "axios";
 import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
@@ -8,6 +8,8 @@ import Popover from "react-bootstrap/Popover";
 import Spinner from "react-bootstrap/Spinner";
 import { FaEye, FaEyeSlash, FaInfoCircle, FaLock } from "react-icons/fa";
 import PasswordRequirements from "../components/password/PasswordRequirements";
+import { toast } from "../components/toast";
+import { ForgotPasswordService } from "../features/forgotpassword/service";
 import {
   PASSWORD_MAX_LENGTH,
   isStrongPasswordValid,
@@ -22,12 +24,11 @@ type ResetPasswordFields = {
 
 type FieldErrors = Partial<ResetPasswordFields>;
 
-type SubmitStatus = {
-  type: "success" | "danger";
-  message: string;
-};
-
 const ResetPassword = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token") ?? "";
+
   const [formData, setFormData] = useState<ResetPasswordFields>({
     newPassword: "",
     confirmPassword: "",
@@ -36,7 +37,6 @@ const ResetPassword = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState<SubmitStatus | null>(null);
 
   const validate = (values: ResetPasswordFields): FieldErrors => {
     const nextErrors: FieldErrors = {};
@@ -64,7 +64,6 @@ const ResetPassword = () => {
     const nextData = { ...formData, [name]: nextValue };
 
     setFormData(nextData);
-    setStatus(null);
 
     setErrors((prev) => {
       const updated = { ...prev };
@@ -88,7 +87,7 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setStatus(null);
+    toast.dismiss();
 
     const validationErrors = validate(formData);
     if (Object.keys(validationErrors).length > 0) {
@@ -96,21 +95,39 @@ const ResetPassword = () => {
       return;
     }
 
+    if (!token) {
+      toast.error(
+        "Reset link is invalid or missing. Please request a new one.",
+      );
+      return;
+    }
+
     setErrors({});
     setLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      setStatus({
-        type: "success",
-        message: "Your password has been updated successfully.",
-      });
-      setFormData({ newPassword: "", confirmPassword: "" });
-    } catch {
-      setStatus({
-        type: "danger",
-        message: "Something went wrong. Please try again.",
-      });
+      const response = await ForgotPasswordService.resetPassword(
+        token,
+        formData.newPassword,
+        formData.confirmPassword,
+      );
+
+      if (response?.statusCode === 200) {
+        toast.success(
+          response?.message || "Your password has been updated successfully.",
+        );
+        setFormData({ newPassword: "", confirmPassword: "" });
+        setTimeout(() => navigate("/login"), 2000);
+      } else {
+        toast.error(
+          response?.message || "Something went wrong. Please try again.",
+        );
+      }
+    } catch (err) {
+      const message = axios.isAxiosError(err)
+        ? (err.response?.data?.message ?? "Failed to reset password.")
+        : "Failed to reset password.";
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -157,19 +174,6 @@ const ResetPassword = () => {
                     Enter your new password below
                   </p>
                 </div>
-
-                {status && (
-                  <Alert
-                    variant={status.type}
-                    className="rounded-3"
-                    role="alert"
-                    aria-live="polite"
-                    onClose={() => setStatus(null)}
-                    dismissible
-                  >
-                    {status.message}
-                  </Alert>
-                )}
 
                 <form onSubmit={handleSubmit} noValidate>
                   <div className="mb-3">

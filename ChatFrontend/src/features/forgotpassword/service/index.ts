@@ -27,25 +27,17 @@ class ForgotPasswordService {
         }
     };
 
-    static resetPassword = async (newPassword: string, confirmPassword: string) => {
-        if (!newPassword || !confirmPassword) {
-            const errorMessage = getToastErrorMessage(
-                new Error("New password and confirm password are required"),
-                "New password and confirm password are required",
-            );
-            return errorMessage;
-        }
-
-        try {
-            const response = await axios.post(`${API_URL}/auth/reset-password`, {
-                newPassword,
-                confirmPassword,
-            });
-            return response.data;
-        } catch (error) {
-            const errorMessage = getToastErrorMessage(error, "Failed to reset password");
-            return errorMessage;
-        }
+    static resetPassword = async (
+        token: string,
+        newPassword: string,
+        confirmPassword: string,
+    ) => {
+        const response = await axios.post(`${API_URL}/auth/reset-password`, {
+            token,
+            newPassword,
+            confirmPassword,
+        });
+        return response.data;
     }
 }
 export { ForgotPasswordService };
