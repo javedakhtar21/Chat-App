@@ -1,8 +1,18 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
+import InputGroup from "react-bootstrap/InputGroup";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Popover from "react-bootstrap/Popover";
 import { Link, useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash, FaInfoCircle } from "react-icons/fa";
 import { authService } from "../features/auth";
 import { getToastErrorMessage, toast } from "../components/toast";
+import PasswordRequirements from "../components/password/PasswordRequirements";
+import {
+  PASSWORD_MAX_LENGTH,
+  validateConfirmPassword,
+  validateStrongPassword,
+} from "../Utils/Validation/passwordValidation";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -16,23 +26,48 @@ const RegisterPage = () => {
   };
   const [formData, setFormData] = useState(initialState);
   const [loading, setLoading] = useState(false);
+  const [passwordErrors, setPasswordErrors] = useState<{
+    password?: string;
+    confirmPassword?: string;
+  }>({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    const isPasswordField = name === "password" || name === "confirmPassword";
+    const nextValue = isPasswordField
+      ? value.slice(0, PASSWORD_MAX_LENGTH)
+      : value;
+    const nextData = { ...formData, [name]: nextValue };
+
+    setFormData(nextData);
+
+    if (isPasswordField) {
+      setPasswordErrors((prev) => {
+        const updated = { ...prev };
+        if (name === "password") {
+          updated.password = validateStrongPassword(nextData.password);
+          if (nextData.confirmPassword) {
+            updated.confirmPassword = validateConfirmPassword(
+              nextData.password,
+              nextData.confirmPassword,
+            );
+          }
+        } else {
+          updated.confirmPassword = validateConfirmPassword(
+            nextData.password,
+            nextData.confirmPassword,
+          );
+        }
+        return updated;
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     toast.dismiss();
-
-    if (formData.password !== formData.confirmPassword) {
-      toast.warning("Passwords do not match");
-      return;
-    }
 
     if (
       !formData.firstName ||
@@ -42,6 +77,21 @@ const RegisterPage = () => {
       !formData.password
     ) {
       toast.warning("Please fill in all fields");
+      return;
+    }
+
+    const passwordError = validateStrongPassword(formData.password);
+    const confirmError = validateConfirmPassword(
+      formData.password,
+      formData.confirmPassword,
+    );
+
+    if (passwordError || confirmError) {
+      setPasswordErrors({
+        password: passwordError,
+        confirmPassword: confirmError,
+      });
+      toast.warning(passwordError || confirmError || "Invalid password");
       return;
     }
 
@@ -68,10 +118,6 @@ const RegisterPage = () => {
       setLoading(false);
     }
   };
-
-  const passwordsDoNotMatch =
-    Boolean(formData.confirmPassword) &&
-    formData.password !== formData.confirmPassword;
 
   return (
     <main className="container-fluid bg-light">
@@ -202,15 +248,66 @@ const RegisterPage = () => {
                         >
                           Password
                         </label>
-                        <input
-                          type="password"
-                          name="password"
-                          id="password"
-                          onChange={handleInputChange}
-                          className="form-control rounded-3"
+                        <InputGroup hasValidation>
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            id="password"
+                            onChange={handleInputChange}
+                            className={`form-control rounded-start-3 ${
+                              passwordErrors.password ? "is-invalid" : ""
+                            }`}
+                            value={formData.password}
+                            placeholder="Enter password"
+                            maxLength={PASSWORD_MAX_LENGTH}
+                            required
+                          />
+                          <OverlayTrigger
+                            trigger={["hover", "focus", "click"]}
+                            placement="top"
+                            overlay={
+                              <Popover id="register-password-rules-popover">
+                                <Popover.Header as="h6">
+                                  Password rules
+                                </Popover.Header>
+                                <Popover.Body>
+                                  <PasswordRequirements
+                                    value={formData.password}
+                                    showStrength={false}
+                                  />
+                                </Popover.Body>
+                              </Popover>
+                            }
+                          >
+                            <Button
+                              type="button"
+                              variant="outline-secondary"
+                              aria-label="Show password rules"
+                            >
+                              <FaInfoCircle />
+                            </Button>
+                          </OverlayTrigger>
+                          <Button
+                            type="button"
+                            variant="outline-secondary"
+                            className="rounded-end-3"
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            aria-label={
+                              showPassword ? "Hide password" : "Show password"
+                            }
+                          >
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                          </Button>
+                          {passwordErrors.password && (
+                            <div className="invalid-feedback">
+                              {passwordErrors.password}
+                            </div>
+                          )}
+                        </InputGroup>
+                        <PasswordRequirements
                           value={formData.password}
-                          placeholder="Enter password"
-                          required
+                          showChecklist={false}
+                          className="mt-2"
                         />
                       </div>
                       <div className="col-12 col-md-6 register-form-column">
@@ -220,21 +317,41 @@ const RegisterPage = () => {
                         >
                           Confirm Password
                         </label>
-                        <input
-                          type="password"
-                          name="confirmPassword"
-                          id="confirmPassword"
-                          onChange={handleInputChange}
-                          className={`form-control rounded-3 ${
-                            passwordsDoNotMatch ? "is-invalid" : ""
-                          }`}
-                          value={formData.confirmPassword}
-                          placeholder="Confirm password"
-                          required
-                        />
-                        <div className="invalid-feedback">
-                          Passwords do not match.
-                        </div>
+                        <InputGroup hasValidation>
+                          <input
+                            type={showConfirmPassword ? "text" : "password"}
+                            name="confirmPassword"
+                            id="confirmPassword"
+                            onChange={handleInputChange}
+                            className={`form-control rounded-start-3 ${
+                              passwordErrors.confirmPassword ? "is-invalid" : ""
+                            }`}
+                            value={formData.confirmPassword}
+                            placeholder="Confirm password"
+                            maxLength={PASSWORD_MAX_LENGTH}
+                            required
+                          />
+                          <Button
+                            type="button"
+                            variant="outline-secondary"
+                            className="rounded-end-3"
+                            onClick={() =>
+                              setShowConfirmPassword((prev) => !prev)
+                            }
+                            aria-label={
+                              showConfirmPassword
+                                ? "Hide password"
+                                : "Show password"
+                            }
+                          >
+                            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                          </Button>
+                          {passwordErrors.confirmPassword && (
+                            <div className="invalid-feedback">
+                              {passwordErrors.confirmPassword}
+                            </div>
+                          )}
+                        </InputGroup>
                       </div>
                     </div>
 

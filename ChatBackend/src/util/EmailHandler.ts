@@ -68,9 +68,9 @@ class EmailService {
       );
 
       forgetPasswordTemplateData = forgetPasswordTemplateData
-        .replace("{{NAME}}", name)
-        .replace("{{EMAIL}}", email)
-        .replaceAll("{{RESET_LINK}}", resetLink);
+        .replace(/\{\{NAME\}\}/g, () => name)
+        .replace(/\{\{EMAIL\}\}/g, () => email)
+        .replace(/\{\{RESET_LINK\}\}/g, () => resetLink);
 
       await this.transporter.sendMail({
         from: `"Talksy" ${process.env.GMAIL}`,
