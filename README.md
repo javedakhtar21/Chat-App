@@ -112,6 +112,7 @@ Create a `.env` file inside the ChatFrontend directory and add the following var
 VITE_API_URL='http://localhost:3000/api/v1'
 VITE_API_SOCKET_URL='http://localhost:3000'
 ---
+```
 
 ## Running the Application
 
