@@ -77,6 +77,7 @@ class AuthService {
 
     if (!user) {
       return {
+        data: null,
         statusCode: 401,
         message: "Invalid credentials",
       };
@@ -86,6 +87,7 @@ class AuthService {
 
     if (!isPasswordValid) {
       return {
+        data: null,
         statusCode: 401,
         message: "Invalid credentials",
       };

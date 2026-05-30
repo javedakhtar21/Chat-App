@@ -10,6 +10,12 @@ class HelperFunctions {
 
     return formattedDateAndTime;
   };
+
+  getLocalStorageItem(key: string) {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem(key);
+    }
+  }
 }
 
 export const HelperFunctionsClass = new HelperFunctions();

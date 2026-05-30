@@ -11,6 +11,7 @@ class SocketConnection {
     this.socket.on("connection", (socket: any) => {
       const socketId = socket.id;
       const user = socket.user;
+      debugger
 
       console.log({
         id: socket.id,
@@ -26,7 +27,7 @@ class SocketConnection {
       socket.emit("welcome", {
         statusCode: 200,
         message: "Successfully connected to the socket",
-        data: { ...user, socketId: socketId },
+        data: { ...user,userId:user.userId, socketId: socketId },
       });
 
       // join room
