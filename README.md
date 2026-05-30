@@ -1,7 +1,7 @@
-# Tasksy - Real-Time Chat Application
+# Talksy - Real-Time Chat Application
 
 ## Description
-Tasksy is a modern real-time chat application designed to provide seamless communication between users through private and group conversations. The platform enables instant messaging, user authentication, real-time updates, and a responsive user experience. It is built using modern web technologies to ensure scalability, security, and performance.
+Talksy is a modern real-time chat application designed to provide seamless communication between users through private and group conversations. The platform enables instant messaging, user authentication, real-time updates, and a responsive user experience. It is built using modern web technologies to ensure scalability, security, and performance.
 
 ## Features
 
