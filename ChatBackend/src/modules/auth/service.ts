@@ -117,6 +117,7 @@ class AuthService {
     };
   }
 
+ // this will send the reset password link to the user email 
   async forgetPassword(requestBody: any) {
     debugger;
     const { email } = requestBody;
@@ -143,7 +144,7 @@ class AuthService {
         userId: user.userId,
         email: user.email,
       },
-      { tokenExpiry: "2m" },
+      { tokenExpiry: "15m" },
     );
 
     const resetLink = `${process.env.Frontend_URL}/reset-password?token=${token}`;
@@ -161,6 +162,7 @@ class AuthService {
     };
   }
 
+  // this will let the user set new password
   async resetPassword(
     token: string,
     newPassword: string,
@@ -178,14 +180,6 @@ class AuthService {
       return {
         statusCode: 400,
         message: "New password and confirm password are required",
-        data: null,
-      };
-    }
-
-    if (newPassword !== confirmPassword) {
-      return {
-        statusCode: 400,
-        message: "New password and confirm password do not match",
         data: null,
       };
     }
@@ -219,7 +213,7 @@ class AuthService {
     return {
       statusCode: 200,
       message: "Password has been reset successfully",
-      data: null,
+      data: user.email,
     };
   }
 }
