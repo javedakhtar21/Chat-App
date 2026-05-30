@@ -98,7 +98,7 @@ const RegisterPage = () => {
     setLoading(true);
 
     try {
-      const { confirmPassword, ...registerData } = formData;
+      const { ...registerData } = formData;
       const response = await authService.register(registerData);
 
       if (response.statusCode === 201) {
@@ -362,7 +362,7 @@ const RegisterPage = () => {
                         className="rounded-3 shadow-sm"
                         disabled={loading}
                       >
-                        {loading ? "Registering..." : "Create Account"}
+                        {loading ? "Creating account..." : "Create Account"}
                       </Button>
                     </div>
                   </form>

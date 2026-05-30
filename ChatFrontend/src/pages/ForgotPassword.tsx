@@ -15,7 +15,6 @@ const ForgotPassword = () => {
   };
 
   const handleSendResetLink = async () => {
-    debugger;
     if (!email) {
       toast.warning("Email is required");
       return;
@@ -24,10 +23,11 @@ const ForgotPassword = () => {
     setLoading(true);
     try {
       const response = await ForgotPasswordService.sendResetLink(email);
-      if (response.statusCode === 200) {
-        toast.success(response.message || "Reset link sent successfully");
+      const responseData = response.data || response;
+      if (responseData.statusCode === 200) {
+        toast.success(responseData.message || "Reset link sent successfully");
       } else {
-        toast.error(response.message || "Failed to send reset link");
+        toast.error(responseData.message || "Failed to send reset link");
       }
     } catch (error) {
       const errorMessage = getToastErrorMessage(

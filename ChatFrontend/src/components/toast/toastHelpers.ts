@@ -1,6 +1,3 @@
-export const getToastErrorMessage = (
-  error: unknown,
-  fallbackMessage: string,
-) => {
-  return error instanceof Error ? error.message : fallbackMessage;
+export const getToastErrorMessage = (error: any, fallbackMessage: string) => {
+  return error.response.data.message || fallbackMessage;
 };

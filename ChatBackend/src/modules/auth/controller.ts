@@ -14,7 +14,6 @@ class AuthController {
   };
 
   public login = async (req: Request, res: Response): Promise<void> => {
-    debugger
     const requestBody = req.body;
     if (!requestBody) {
       res.status(400).json({ message: "Request body is missing" });
@@ -25,17 +24,19 @@ class AuthController {
     res.status(response.statusCode).json(response);
   };
 
-  public forgetPassword= async(req: Request, res: Response): Promise<void> => {
-    debugger
+  public forgetPassword = async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
     const requestBody = req.body;
     if (!requestBody) {
       res.status(400).json({ message: "Request body is missing" });
       return;
     }
 
-    const response= await authService.forgetPassword(requestBody);
+    const response = await authService.forgetPassword(requestBody);
     res.status(response.statusCode).json(response);
-  }
+  };
 
   public resetPassword = async (req: Request, res: Response): Promise<void> => {
     const requestBody = req.body;
@@ -54,4 +55,5 @@ class AuthController {
   };
 }
 
-export const                                                                                                                                                                    authController = new AuthController();
+const authController = new AuthController();
+export { authController };

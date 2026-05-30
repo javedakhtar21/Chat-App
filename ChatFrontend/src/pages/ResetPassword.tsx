@@ -5,7 +5,6 @@ import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
-import Spinner from "react-bootstrap/Spinner";
 import { FaEye, FaEyeSlash, FaInfoCircle, FaLock } from "react-icons/fa";
 import PasswordRequirements from "../components/password/PasswordRequirements";
 import { toast } from "../components/toast";
@@ -274,7 +273,9 @@ const ResetPassword = () => {
                         className="rounded-end-3"
                         onClick={() => setShowConfirmPassword((prev) => !prev)}
                         aria-label={
-                          showConfirmPassword ? "Hide password" : "Show password"
+                          showConfirmPassword
+                            ? "Hide password"
+                            : "Show password"
                         }
                       >
                         {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
@@ -295,28 +296,17 @@ const ResetPassword = () => {
                       className="rounded-3 shadow-sm"
                       disabled={loading || !isFormValid}
                     >
-                      {loading ? (
-                        <>
-                          <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                            className="me-2"
-                          />
-                          Updating...
-                        </>
-                      ) : (
-                        "Update Password"
-                      )}
+                      {loading ? "Updating password..." : "Update Password"}
                     </Button>
                   </div>
                 </form>
 
                 <p className="text-center mt-4 mb-0 text-muted">
                   Back to{" "}
-                  <Link to="/login" className="fw-semibold text-decoration-none">
+                  <Link
+                    to="/login"
+                    className="fw-semibold text-decoration-none"
+                  >
                     Login
                   </Link>
                 </p>
