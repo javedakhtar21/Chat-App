@@ -71,7 +71,7 @@ class AuthService {
   //login service
   async login(requestBody: any) {
     const { email, password } = requestBody;
-    debugger;
+    // debugger;
 
     const user = await UserModel.findOne({ email: email }).select("+password");
 
@@ -121,7 +121,7 @@ class AuthService {
 
  // this will send the reset password link to the user email 
   async forgetPassword(requestBody: any) {
-    debugger;
+    // debugger;
     const { email } = requestBody;
 
     if (!email) {

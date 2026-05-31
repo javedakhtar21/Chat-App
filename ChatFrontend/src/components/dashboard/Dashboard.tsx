@@ -43,7 +43,7 @@ const Dashboard: React.FC = () => {
   }, [currentUser?.id]);
 
   const handleLogout = () => {
-    toast.dismiss();
+    // toast.dismiss();
     authService.logout();
     toast.success("Logged out successfully");
     navigate("/login");
@@ -74,10 +74,27 @@ const Dashboard: React.FC = () => {
       return;
     }
 
-    customSocket.emit("sendMsg", trimmedMessage);
-    toast.success("Message sent");
+    customSocket.emit("sendMsg", {
+      receiverId: selectedUser?.userId,
+      message: trimmedMessage,
+    });
+    toast.success(
+      `Message sent to ${selectedUser?.firstName} ${selectedUser?.lastName}, msg: ${trimmedMessage}`,
+    );
     setMsg("");
   };
+
+  useEffect(() => {
+    const handleMessage = (data: any) => {
+      console.log("Message received", data);
+    };
+
+    customSocket.on("recMsg", handleMessage);
+
+    return () => {
+      customSocket.off("recMsg", handleMessage);
+    };
+  }, []);
 
   const handleMsgBox = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;

@@ -1,3 +1,5 @@
+import { UserRooom } from "./rooms/useRooms";
+import { SendMessageEvent } from "./events/sendMessageEvent";
 import * as io from "socket.io";
 
 class SocketConnection {
@@ -11,35 +13,20 @@ class SocketConnection {
     this.socket.on("connection", (socket: any) => {
       const socketId = socket.id;
       const user = socket.user;
-      debugger
 
-      console.log({
-        id: socket.id,
-        connected: socket.connected,
-        rooms: Array.from(socket.rooms),
-        user,
-        handshake: {
-          auth: socket.handshake.auth,
-        },
-      });
+      console.log(`A user is connected with socket: ${socket.id}`);
 
       // notifying user of successful connection
       socket.emit("welcome", {
         statusCode: 200,
         message: "Successfully connected to the socket",
-        data: { ...user,userId:user.userId, socketId: socketId },
+        data: { ...user, userId: user.userId, socketId: socketId },
       });
 
-      // join room
-      socket.join("personalChat")
-
-      socket.on("sendMsg", (data: any) => {
-        console.log(`Message received from ${socketId}:`, data);
-        socket.emit("recMsg", {
-          data,
-          msgFromServer: "Your msg received by server",
-        });
-      });
+      // user joining in room
+      UserRooom.join(socket);
+      //  registering send msg events
+      SendMessageEvent.register(this.socket, socket);
 
       socket.on("disconnect", (reason: string) => {
         console.log(

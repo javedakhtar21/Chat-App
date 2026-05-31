@@ -105,7 +105,7 @@ const ProfilePage: React.FC = () => {
   }, [userId]);
 
   const handleLogout = () => {
-    toast.dismiss();
+    // toast.dismiss();
     authService.logout();
     toast.success("Logged out successfully");
     navigate("/login");

@@ -23,9 +23,8 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toast.dismiss();
+    // toast.dismiss();
     setLoading(true);
-    debugger;
     try {
       const response = await authService.login(formData);
 
@@ -44,7 +43,6 @@ const LoginPage = () => {
         toast.error(response.message || "Login failed. Please try again.");
       }
     } catch (err: any) {
-      debugger;
       const errorMsg =
         err.response?.data?.message ||
         err.message ||

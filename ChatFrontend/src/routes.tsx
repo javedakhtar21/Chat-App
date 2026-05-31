@@ -7,7 +7,7 @@ const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const UserDashboard = lazy(
-  () => import("./components/user-dashboard/Dashboard"),
+  () => import("./components/dashboard/Dashboard"),
 );
 const NotFoundPage = lazy(() => import("./components/NotFound/NotFoundPage"));
 const FallbackComponent= lazy(()=>import("./components/Fallback/Fallback"))

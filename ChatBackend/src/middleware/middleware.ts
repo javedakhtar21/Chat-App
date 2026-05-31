@@ -2,7 +2,7 @@
 import { TokenHandler } from "../util/TokenHandler";
 
 export const socketAuthMiddleware = (socket: any, next: any) => {
-  debugger;
+  // debugger;
   //   console.log("Socket: ", socket);
   const token = socket?.handshake?.auth?.token;
 

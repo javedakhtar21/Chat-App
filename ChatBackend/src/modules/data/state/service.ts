@@ -104,7 +104,7 @@ class StateService {
   };
 
   getStates = async () => {
-    debugger
+    // debugger
     const states = await StateModel.find().sort({ name: 1 }).lean();
 
     return states;

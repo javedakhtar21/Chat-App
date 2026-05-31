@@ -53,7 +53,7 @@ class EmailService {
     name: string,
     resetLink: string,
   ) => {
-    debugger;
+    // debugger;
     if (!email || !name) {
       return "Please provide email and name to send forgot password email";
     }
