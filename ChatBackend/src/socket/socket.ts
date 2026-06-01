@@ -1,7 +1,8 @@
 import { UserRooom } from "./rooms/useRooms";
 import { SendMessageEvent } from "./events/sendMessageEvent";
 import * as io from "socket.io";
-
+import { UserModel } from "../modules/users/model";
+import { SocketHandler } from "../util/SocketHandler";
 class SocketConnection {
   private socket: io.Server;
   constructor(io: io.Server) {
@@ -10,9 +11,21 @@ class SocketConnection {
   }
 
   private startSocket = () => {
-    this.socket.on("connection", (socket: any) => {
+    this.socket.on("connection", async (socket: any) => {
+      debugger
       const socketId = socket.id;
       const user = socket.user;
+
+      const userDetails = await UserModel.findOne({ userId: user.UserId })
+
+      // saving the connection details of user : on connection
+      if (userDetails && socketId) {
+        debugger
+        if (userDetails) {
+          await SocketHandler.saveConnectionDetails(userDetails.userId, socketId);
+          console.log(`connection details saved for user: ${userDetails.userId}`);
+        }
+      }
 
       console.log(`A user is connected with socket: ${socket.id}`);
 
@@ -28,7 +41,9 @@ class SocketConnection {
       //  registering send msg events
       SendMessageEvent.register(this.socket, socket);
 
-      socket.on("disconnect", (reason: string) => {
+      socket.on("disconnect", async (reason: string) => {
+        await SocketHandler.deleteConnectionDetails(user.UserId);
+        console.log(`connection details deleted for user: ${user.UserId}`);
         console.log(
           `A user is disconnected with id: ${socketId}, due to reason: ${reason}`,
         );

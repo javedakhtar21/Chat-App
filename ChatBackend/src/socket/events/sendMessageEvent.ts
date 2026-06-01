@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { UserModel } from "../../modules/auth/model";
+import { UserModel } from "../../modules/users/model";
 
 export class SendMessageEvent {
   static register(io: Server, socket: any) {
@@ -11,6 +11,7 @@ export class SendMessageEvent {
       const message = data.message;
       const createdAt = Date.now();
 
+      // getting the receiver user details
       const receiverUser = await UserModel.findOne({ userId: receiverId });
 
       let payloadToBeSent = {

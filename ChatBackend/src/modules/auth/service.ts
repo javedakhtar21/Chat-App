@@ -1,4 +1,4 @@
-import { UserModel } from "./model";
+import { UserModel } from "../users/model";
 import { CounterModel } from "./counter";
 import bcrypt from "bcrypt";
 // import jwt from "jsonwebtoken";

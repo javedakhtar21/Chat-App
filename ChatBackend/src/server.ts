@@ -6,23 +6,26 @@ import { socketAuthMiddleware } from "./middleware/middleware";
 import dotenv from "dotenv";
 dotenv.config();
 
-// creating the http server
+// Creating the http server
 const server = http.createServer(app);
 
-// initializing the socket connection
+// port of server
+const PORT = process.env.MAIN_PORT || 3000;
+const ENV = process.env.ENV || "development";
+
+// Initializing the socket connection
 const IO = new Server(server, {
   cors: { origin: "*", methods: ["get", "post", "put", "patch", "delete"] },
-  // transports: ["websocket"],
 });
 
-// token verifier middlewarer
+// Token verifier middleware
 IO.use(socketAuthMiddleware);
 
-// passing the io to the socket creation class
+// Passing the io to the socket creation class
 new SocketConnection(IO);
 
-server.listen(process.env.MAIN_PORT, () => {
+server.listen(PORT, () => {
   console.log(
-    `server is started on http://localhost:${process.env.MAIN_PORT} at ${process.env.ENV} environment`,
+    `server is started on http://localhost:${PORT} at ${ENV} environment`,
   );
 });

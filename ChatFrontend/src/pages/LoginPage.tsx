@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { authService } from "../features/auth";
 import { customSocket } from "../socket";
-import { getToastErrorMessage, toast } from "../components/toast";
+import { toast } from "../components/toast";
 const LoginPage = () => {
   const navigate = useNavigate();
   const initialState = {
