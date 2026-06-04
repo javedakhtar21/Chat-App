@@ -13,6 +13,7 @@ import type { ProfileFormData } from "../features/users/types";
 import { statesService } from "../Utils/Data/State";
 import type { IState } from "../Utils/Data/State";
 import { getToastErrorMessage, toast } from "../components/toast";
+import { HelperFunctionsClass } from "../Utils/HelperFunctions/HelperFunctions";
 import {
   FaEnvelope,
   FaPhoneAlt,
@@ -104,11 +105,9 @@ const ProfilePage: React.FC = () => {
     fetchUserDetails();
   }, [userId]);
 
-  const handleLogout = () => {
-    // toast.dismiss();
-    authService.logout();
-    toast.success("Logged out successfully");
-    navigate("/login");
+  const handleLogout = async() => {
+    debugger
+    await HelperFunctionsClass.logoutHandler(navigate);
   };
 
   const handleBack = () => {

@@ -1,5 +1,4 @@
 import { UserConnectionModel } from "../modules/users/model";
-import mongoose from "mongoose";
 
 
 class SocketHandler {

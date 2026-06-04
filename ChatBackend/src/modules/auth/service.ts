@@ -4,8 +4,7 @@ import bcrypt from "bcrypt";
 // import jwt from "jsonwebtoken";
 import { EmailHandler } from "../../util/EmailHandler";
 import { TokenHandler } from "../../util/TokenHandler";
-import { response } from "express";
-
+import { UserConnectionModel } from "../users/model";
 const getNextUserId = async (): Promise<number> => {
   const counter = await CounterModel.findOneAndUpdate(
     { _id: "userId" },
@@ -99,10 +98,13 @@ class AuthService {
     //   { expiresIn: "24h" },
     // );
 
-    const token = TokenHandler.createToken({
-      UserId: user.userId,
-      email: user.email,
-    }, {tokenExpiry: "24h"});
+    const token = TokenHandler.createToken(
+      {
+        UserId: user.userId,
+        email: user.email,
+      },
+      { tokenExpiry: "24h" },
+    );
 
     return {
       statusCode: 200,
@@ -119,7 +121,39 @@ class AuthService {
     };
   }
 
- // this will send the reset password link to the user email 
+  // logout service
+  async logout(requestBody: any) {
+    const { userId } = requestBody;
+
+    if (!userId) {
+      return {
+        statusCode: 400,
+        message: "UserId is required",
+        data: null,
+      };
+    }
+
+    const userDetails = await UserModel.findOne({ userId: userId });
+
+    if (!userDetails) {
+      return {
+        statusCode: 404,
+        message: "User not found",
+        data: null,
+      };
+    }
+
+    await UserConnectionModel.findOneAndDelete({ userId: userId });
+    console.log(`User with userId ${userId} has been logged out and removed from active connections.`);
+
+    return {
+      statusCode: 200,
+      message: "Logout successful",
+      data: null,
+    };
+  }
+
+  // this will send the reset password link to the user email
   async forgetPassword(requestBody: any) {
     // debugger;
     const { email } = requestBody;

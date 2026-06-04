@@ -11,6 +11,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { customSocket } from "../../socket";
 import { getToastErrorMessage, toast } from "../toast";
 import LogoutConfirmModal from "../common/LogoutConfirmModal";
+import { HelperFunctionsClass } from "../../Utils/HelperFunctions/HelperFunctions";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -42,11 +43,9 @@ const Dashboard: React.FC = () => {
     fetchUsers();
   }, [currentUser?.id]);
 
-  const handleLogout = () => {
-    // toast.dismiss();
-    authService.logout();
-    toast.success("Logged out successfully");
-    navigate("/login");
+  const handleLogout = async () => {
+    debugger
+    await HelperFunctionsClass.logoutHandler(navigate);
   };
 
   const handleViewProfile = () => {

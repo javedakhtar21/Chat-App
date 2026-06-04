@@ -6,7 +6,10 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api/v1";
 export const authService = {
   register: async (data: RegisterData): Promise<AuthResponse> => {
     try {
-      const response = await axios.post<AuthResponse>(`${API_URL}/auth/register`, data);
+      const response = await axios.post<AuthResponse>(
+        `${API_URL}/auth/register`,
+        data,
+      );
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -18,7 +21,10 @@ export const authService = {
 
   login: async (data: LoginData): Promise<AuthResponse> => {
     try {
-      const response = await axios.post<AuthResponse>(`${API_URL}/auth/login`, data);
+      const response = await axios.post<AuthResponse>(
+        `${API_URL}/auth/login`,
+        data,
+      );
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -28,9 +34,18 @@ export const authService = {
     }
   },
 
-  logout: () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+  logout: async () => {
+    try {
+      const response = await axios.post(`${API_URL}/auth/logout`, {
+        userId: authService.getCurrentUser()?.userId,
+      });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data?.message || "Logout failed");
+      }
+      throw new Error("Logout failed");
+    }
   },
 
   getCurrentUser: () => {
