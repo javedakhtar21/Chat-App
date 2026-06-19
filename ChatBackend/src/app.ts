@@ -6,6 +6,7 @@ import authRoutes from "./modules/auth/routes";
 import userRoutes from "./modules/users/routes";
 import { cityRouter } from "./modules/data/city/routes";
 import { stateRouter } from "./modules/data/state/routes";
+import { UserConnectionRouter } from "./modules/user-connection/routes";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/cities", cityRouter);
 app.use("/api/v1/states", stateRouter);
+app.use("/api/v1/connection", UserConnectionRouter);
 
 app.get("/", (req, res) => {
   res.status(200).json({

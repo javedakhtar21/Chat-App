@@ -40,40 +40,5 @@ const userSchema = new Schema<IUserDocument>(
   { timestamps: true },
 );
 
-// 2. user connection schema(for storing the user socket connection details)
-const userConnectionSchema = new Schema(
-  {
-    userId: {
-      type: Number,
-      ref: "User",
-      required: true,
-      index: true,
-      unique: true,
-    },
 
-    socketId: {
-      type: String,
-      required: true,
-      index: true,
-    },
-
-    connectedAt: {
-      type: Date,
-      default: Date.now,
-    },
-
-    lastActivity: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  {
-    timestamps: true,
-  },
-);
-
-export const UserConnectionModel = model(
-  "UserConnection",
-  userConnectionSchema,
-);
 export const UserModel = model<IUserDocument>("User", userSchema);

@@ -17,9 +17,10 @@ class SocketConnection {
       const user = socket.user;
 
       const userDetails = await UserModel.findOne({ userId: user.UserId })
+      const isUserAlreadyConnected = userDetails?.userId===user.UserId;
 
       // saving the connection details of user : on connection
-      if (userDetails && socketId) {
+      if (!isUserAlreadyConnected) {
         debugger
         if (userDetails) {
           await SocketHandler.saveConnectionDetails(userDetails.userId, socketId);

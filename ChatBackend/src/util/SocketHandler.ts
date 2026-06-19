@@ -1,4 +1,4 @@
-import { UserConnectionModel } from "../modules/users/model";
+import { UserConnectionModel } from "../modules/user-connection/model";
 
 
 class SocketHandler {

@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 // import jwt from "jsonwebtoken";
 import { EmailHandler } from "../../util/EmailHandler";
 import { TokenHandler } from "../../util/TokenHandler";
-import { UserConnectionModel } from "../users/model";
+import { UserConnectionModel } from "../user-connection/model";
 const getNextUserId = async (): Promise<number> => {
   const counter = await CounterModel.findOneAndUpdate(
     { _id: "userId" },

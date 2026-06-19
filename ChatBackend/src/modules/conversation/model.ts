@@ -1,4 +1,5 @@
 import { model, Schema, Document } from "mongoose";
+
 // 1. conversation schema
 const conversationSchema = new Schema(
   {
