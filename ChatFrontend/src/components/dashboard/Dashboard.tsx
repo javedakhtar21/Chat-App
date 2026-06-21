@@ -2,49 +2,48 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../../features/auth";
-import { userService } from "../../features/users";
+// import { userService } from "../../features/users";
 import type { User } from "../../features/users/types";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
 import Dropdown from "react-bootstrap/Dropdown";
 import { customSocket } from "../../socket";
-import { getToastErrorMessage, toast } from "../toast";
+import { toast } from "../toast";
 import LogoutConfirmModal from "../common/LogoutConfirmModal";
 import { HelperFunctionsClass } from "../../Utils/HelperFunctions/HelperFunctions";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
-  const [users, setUsers] = useState<User[]>([]);
+  // const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState("");
   // UI-only: controls visibility of the logout confirmation modal
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const currentUser = authService.getCurrentUser();
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const allUsers = await userService.getAllUsers();
-        const filteredUsers = allUsers.filter(
-          (user) => user._id !== currentUser?.id,
-        );
-        setUsers(filteredUsers);
-      } catch (error) {
-        toast.error(getToastErrorMessage(error, "Failed to fetch users"));
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchUsers = async () => {
+  //     try {
+  //       const allUsers = await userService.getAllUsers();
+  //       const filteredUsers = allUsers.filter(
+  //         (user) => user._id !== currentUser?.id,
+  //       );
+  //       setUsers(filteredUsers);
+  //     } catch (error) {
+  //       toast.error(getToastErrorMessage(error, "Failed to fetch users"));
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchUsers();
-  }, [currentUser?.id]);
+  //   fetchUsers();
+  // }, [currentUser?.id]);
 
   const handleLogout = async () => {
-    debugger
     await HelperFunctionsClass.logoutHandler(navigate);
   };
 
@@ -58,11 +57,11 @@ const Dashboard: React.FC = () => {
     setSelectedUser(user);
   };
 
-  const filteredUsers = users.filter((user) =>
-    `${user.firstName} ${user.lastName}`
-      .toLowerCase()
-      .includes(searchText.toLowerCase()),
-  );
+  // const filteredUsers = users.filter((user) =>
+  //   `${user.firstName} ${user.lastName}`
+  //     .toLowerCase()
+  //     .includes(searchText.toLowerCase()),
+  // );
 
   const handleSendMsg = () => {
     toast.dismiss();
@@ -99,6 +98,9 @@ const Dashboard: React.FC = () => {
     const { value } = e.target;
     setMsg(value);
   };
+
+  // conversation list chat means recent conversation
+  
 
   return (
     <div className="d-flex flex-column vh-100">
@@ -174,7 +176,7 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* User List */}
-          <div className="flex-grow-1 overflow-auto">
+          {/* <div className="flex-grow-1 overflow-auto">
             {loading ? (
               <div className="text-center p-3">Loading...</div>
             ) : filteredUsers.length === 0 ? (
@@ -209,7 +211,7 @@ const Dashboard: React.FC = () => {
                 </div>
               ))
             )}
-          </div>
+          </div> */}
         </div>
 
         {/* Right Side - Chat Area */}

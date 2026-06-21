@@ -18,19 +18,10 @@ class UserConnectionController {
 
     const parsedUserId = parseInt(userId);
 
-    // if (!isNaN(parsedUserId)) {
-    //   res.status(400).json({
-    //     statusCode: 400,
-    //     message: "userId is invalid, it should be a number",
-    //     data: null,
-    //   });
-    //   return;
-    // }
-
     const response = await UserConnectionService.getConnectionDetails({
       userId: parsedUserId,
     });
-    res.status(200).json(response);
+    res.status(response.statusCode).json(response);
   }
 }
 

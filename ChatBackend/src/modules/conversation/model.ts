@@ -50,8 +50,8 @@ const conversationMemberSchema = new Schema(
       index: true,
     },
 
-    UserId: {
-      type: Schema.Types.ObjectId,
+    userId: {
+      type:Number,
       ref: "User",
       required: true,
       index: true,
@@ -95,7 +95,7 @@ const conversationMemberSchema = new Schema(
 );
 
 // putting index on the conversationId and UserId
-conversationMemberSchema.index({ conversationId: 1, UserId: 1 }, {
+conversationMemberSchema.index({ conversationId: 1, userId: 1 }, {
   unique: true
 })
 
