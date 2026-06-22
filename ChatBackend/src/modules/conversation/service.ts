@@ -2,6 +2,7 @@ import { ConversationMemberModel, ConversationModel } from "./model";
 
 export class ConversationService {
   static getConversations = async (userId: number) => {
+    debugger
     const conversations = await ConversationMemberModel.aggregate([
       {
         $match: {
@@ -79,6 +80,7 @@ export class ConversationService {
             firstName: "$user.firstName",
             lastName: "$user.lastName",
             isOnline: "$user.isOnline",
+            email: "$user.email",
           },
 
           lastMessage: "$conversation.lastMessageText",
@@ -94,7 +96,7 @@ export class ConversationService {
 
     if (!conversations.length) {
       return {
-        statusCode: 404,
+        statusCode: 200,
         message: "No conversations found",
         data: [],
       };
@@ -111,7 +113,7 @@ export class ConversationService {
     const existing = await ConversationMemberModel.aggregate([
       {
         $match: {
-          UserId: {
+          userId: {
             $in: [senderId, receiverId],
           },
         },
@@ -149,11 +151,11 @@ export class ConversationService {
     await ConversationMemberModel.insertMany([
       {
         conversationId: conv._id,
-        UserId: senderId,
+        userId: senderId,
       },
       {
         conversationId: conv._id,
-        UserId: receiverId,
+        userId: receiverId,
       },
     ]);
 

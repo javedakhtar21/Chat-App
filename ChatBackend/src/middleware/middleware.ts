@@ -32,6 +32,7 @@ export const authMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
+  debugger
   const token = req.headers.authorization?.split(" ")[1] as string;
   if (!token) {
     res.status(401).json({

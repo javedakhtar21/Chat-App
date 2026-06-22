@@ -18,7 +18,7 @@ const conversationSchema = new Schema(
       default: null,
     },
     createdBy: {
-      type: Schema.Types.ObjectId,
+      type: Number,
       ref: "User",
       required: true,
     },

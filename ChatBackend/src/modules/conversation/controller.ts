@@ -5,8 +5,9 @@ export class ConversationController {
   static getConversations = async (req: Request, res: Response) => {
     try {
       //   const { userId } = req.params;
-      const { userId } = req.user;
-      if (!userId) {
+      debugger;
+      const { UserId } = req.user;
+      if (!UserId) {
         res.status(400).json({
           statusCode: 400,
           message: "User ID is required",
@@ -15,7 +16,7 @@ export class ConversationController {
         return;
       }
 
-      const parsedUserId = Number(userId);
+      const parsedUserId = Number(UserId);
       if (isNaN(parsedUserId)) {
         res.status(400).json({
           statusCode: 400,

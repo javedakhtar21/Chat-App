@@ -3,14 +3,13 @@ import { customSocket } from "../../socket";
 import { toast } from "../../components/toast";
 
 class HelperFunctions {
-  constructor() {}
+  constructor() { }
 
   getDateAndTime = () => {
     const date = new Date();
 
-    const formattedDateAndTime = `${date.getDate()}/${
-      date.getMonth() + 1
-    }/${date.getFullYear()} : ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    const formattedDateAndTime = `${date.getDate()}/${date.getMonth() + 1
+      }/${date.getFullYear()} : ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 
     return formattedDateAndTime;
   };
@@ -29,7 +28,7 @@ class HelperFunctions {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         customSocket.disconnect();
-        navigate("/login", {replace: true});
+        navigate("/login", { replace: true });
         console.log("User logged out, socket disconnected: ", customSocket.id);
         toast.success(response.message || "Logout successful");
       } else {
@@ -41,6 +40,12 @@ class HelperFunctions {
       console.log("Logout error: ", error);
     }
   }
+
+  getInitials = (firstName: string, lastName: string) => {
+    const firstInitial = firstName ? firstName.charAt(0).toUpperCase() : "";
+    const lastInitial = lastName ? lastName.charAt(0).toUpperCase() : "";
+    return `${firstInitial}${lastInitial}`;
+  };
 }
 
 export const HelperFunctionsClass = new HelperFunctions();
